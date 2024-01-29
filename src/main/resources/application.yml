@@ -1,0 +1,6 @@
+# Database properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/connect
+spring.datasource.username=postgres
+spring.datasource.password=connect
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.jpa.show-sql=true
