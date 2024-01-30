@@ -12,8 +12,13 @@ CREATE DATABASE "connect"
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1
     IS_TEMPLATE = False;
-3. Switch DB using "\c DBNAME"
+3. Switch DB using "\c connect"
 4. Create a table using:
 create table account(name varchar(255), email varchar(255));
 5. Insert some records
-6. Test DB using "localhost:8080/api/accounts" (Can use Postman)
+
+Test DB
+
+1. Update application.yml and application.properties files with your DB password
+2. Build and run the project
+3. Open the following URL: "localhost:8080/api/accounts" and assert your inserted records
