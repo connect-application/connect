@@ -17,10 +17,10 @@ public class UserService implements UserDetailsService {
 
     private final String USER_NOT_FOUND_ERROR = "User with email %s not found";
     private final UserRepository userRepository;
-//    private final BCryptPasswordEncoder bCryptPasswordEncoder; //todo add encoding of password
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException { // used by spring security to find during authentication
         return userRepository.findByEmail(email).
                 orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_ERROR, email)));
     }
@@ -36,10 +36,8 @@ public class UserService implements UserDetailsService {
                 throw new IllegalStateException("User with this user name already exists");
             }
         }
-
-
-//        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-//        user.setPassword(encodedPassword);
+        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
         userRepository.save(user);
         //TODO send confirmation mail here
         return "";

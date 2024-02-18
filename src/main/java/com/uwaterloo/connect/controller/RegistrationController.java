@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/registration")
+@RequestMapping("/api/v1/registration")
 @AllArgsConstructor
 public class RegistrationController {
     private RegistrationService registrationService;

@@ -30,8 +30,8 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private LocalDate dateOfBirth;
-    private boolean active;
-    private boolean locked;
+    private boolean active = false; // will enable once they confirm email
+    private boolean locked = false;
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
@@ -58,12 +58,12 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
-    }
+        return email;
+    } // this will be used for authentication purposes by spring security
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
