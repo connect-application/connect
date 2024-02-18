@@ -33,6 +33,7 @@ public class UserService implements UserDetailsService {
         Optional<User> optionalUser = userRepository.findByUsernameOrEmail(user.getEmail(), user.getUsername());
         if (optionalUser.isPresent()) {
             User dbUser = optionalUser.get();
+            //todo if user is present but email not verified send mail
             if (dbUser.getEmail().equals(user.getEmail())) { //todo throw custom exceptions
                 throw new IllegalStateException("User with this email already exists");
             }
@@ -51,6 +52,10 @@ public class UserService implements UserDetailsService {
 //        TODO: SEND EMAIL
 
         return token;
+    }
+
+    public int enableUser(String email) {
+        return userRepository.enableUser(email);
     }
 
 }
