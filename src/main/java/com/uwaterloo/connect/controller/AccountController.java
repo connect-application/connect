@@ -11,8 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * @deprecated
+ * Account is more of a test entity now, and will be removed in the future
+ */
+@Deprecated()
 @RestController
-@RequestMapping("/api")//TODO: Change to something meaningful
+@RequestMapping("/api")
 public class AccountController {
 
     @Autowired
