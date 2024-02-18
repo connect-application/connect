@@ -3,7 +3,7 @@ package com.uwaterloo.connect.service;
 import com.uwaterloo.connect.enums.UserRole;
 import com.uwaterloo.connect.model.User;
 import com.uwaterloo.connect.utils.InputValidator;
-import dto.RegistrationRequest;
+import com.uwaterloo.connect.dto.RegistrationRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

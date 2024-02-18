@@ -1,5 +1,6 @@
 package com.uwaterloo.connect.service;
 
+import com.uwaterloo.connect.model.EmailToken;
 import com.uwaterloo.connect.model.User;
 import com.uwaterloo.connect.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -9,7 +10,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -18,6 +21,7 @@ public class UserService implements UserDetailsService {
     private final String USER_NOT_FOUND_ERROR = "User with email %s not found";
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final EmailTokenService emailTokenService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException { // used by spring security to find during authentication
@@ -39,8 +43,14 @@ public class UserService implements UserDetailsService {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         userRepository.save(user);
-        //TODO send confirmation mail here
-        return "";
+        String token = UUID.randomUUID().toString();
+        // creating token with 15 expiry
+        EmailToken emailToken = new EmailToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), user);
+        emailTokenService.saveEmailToken(emailToken);
+
+//        TODO: SEND EMAIL
+
+        return token;
     }
 
 }

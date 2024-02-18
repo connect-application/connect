@@ -1,4 +1,4 @@
-package com.uwaterloo.connect.security.config;
+package com.uwaterloo.connect.config;
 
 import com.uwaterloo.connect.service.UserService;
 import lombok.AllArgsConstructor;
@@ -27,11 +27,11 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .authorizeRequests(auth ->
-                        auth
-                                .requestMatchers("/api/v*/registration/**").permitAll()
-                                .anyRequest().authenticated()
-                )
+                .authorizeRequests()
+                    .requestMatchers("/api/v*/registration/**")
+                    .permitAll()
+                .anyRequest()
+                .authenticated().and()
                 .formLogin();
 
         return http.build();

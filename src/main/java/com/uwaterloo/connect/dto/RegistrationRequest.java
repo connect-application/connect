@@ -1,4 +1,4 @@
-package dto;
+package com.uwaterloo.connect.dto;
 
 import lombok.*;
 
