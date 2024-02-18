@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -16,42 +17,34 @@ import java.util.Collections;
 @Setter
 @EqualsAndHashCode
 @Entity
+@Table(name = "users")
 public class User implements UserDetails {
 
     @Id
-    @SequenceGenerator(
-            name = "user_sequence",
-            sequenceName = "user_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "user_sequence"
-    )
+    @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
     private Long id;
     private String firstName;
     private String lastName;
     private String userName;
     private String email;
     private String password;
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
     private boolean active;
     private boolean locked;
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-    public User(String firstName, String lastName, String userName, String email, String password,
-                String dateOfBirth, boolean active, boolean locked, UserRole userRole) {
+    public User(String firstName, String lastName, String userName, String email, String password, LocalDate dateOfBirth, UserRole userRole) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
         this.email = email;
         this.password = password;
         this.dateOfBirth = dateOfBirth;
-        this.active = active;
-        this.locked = locked;
         this.userRole = userRole;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRole.name());

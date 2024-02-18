@@ -2,6 +2,8 @@ package dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -12,6 +14,6 @@ public class RegistrationRequest {
     private String userName;
     private String email;
     private String password;
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
 
 }
