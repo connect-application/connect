@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class RegistrationRequest {
+public class SignUpRequest {
     private String firstName;
     private String lastName;
     private String userName;

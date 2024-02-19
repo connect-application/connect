@@ -16,8 +16,19 @@ CREATE DATABASE "connect"
 4. Create a table using:
 create table account(name varchar(255), email varchar(255));
 5. Insert some records
-6. CREATE TABLE users ( id SERIAL PRIMARY KEY, firstName TEXT NOT NULL, lastName TEXT NOT NULL, userName TEXT UNIQUE NOT NULL, email TEXT UNIQUE NOT NULL, password TEXT NOT NULL, dateOfBirth DATE NOT NULL, active BOOLEAN NOT NULL DEFAULT TRUE,createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL, updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL );
-7. INSERT INTO users (firstName, lastName, userName, email, password, dateOfBirth) VALUES ('John', 'Doe', 'johndoe', 'john@example.com', 'password123', '1990-01-01');
+
+DB Queries
+
+1. CREATE TYPE user_role_enum AS ENUM ( 'USER', 'ADMIN' );
+2. CREATE SEQUENCE email_token_sequence START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
+3. CREATE TABLE emailtoken ( confirmedat timestamp(6) without time zone, createdat timestamp(6) without time zone NOT NULL, expiresat timestamp(6) without time zone NOT NULL, id bigint NOT NULL, user_id bigint NOT NULL, token character varying(255) NOT NULL );
+4. CREATE SEQUENCE user_sequence START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
+5. CREATE TABLE users ( active boolean NOT NULL, dateofbirth date, locked boolean NOT NULL, id bigint NOT NULL, email character varying(255), firstname character varying(255), lastname character varying(255), password character varying(255), username character varying(255), userrole character varying(255), CONSTRAINT users_userrole_check CHECK (((userrole)::text = ANY ((ARRAY['USER'::character varying, 'ADMIN'::character varying])::text[]))) );
+6. ALTER TABLE ONLY emailtoken ADD CONSTRAINT emailtoken_pkey PRIMARY KEY (id);
+7. ALTER TABLE ONLY users ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+8. ALTER TABLE ONLY emailtoken ADD CONSTRAINT fkecxghdteeur3iyqd15ab9yyu7 FOREIGN KEY (user_id) REFERENCES users(id);
+
+
 
 Test DB
 
