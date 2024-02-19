@@ -33,24 +33,23 @@ public class UserService implements UserDetailsService {
         Optional<User> optionalUser = userRepository.findByUsernameOrEmail(user.getEmail(), user.getUsername());
         if (optionalUser.isPresent()) {
             User dbUser = optionalUser.get();
-            //todo if user is present but email not verified send mail
-            if (dbUser.getEmail().equals(user.getEmail())) { //todo throw custom exceptions
-                throw new IllegalStateException("User with this email already exists");
-            }
-            if (dbUser.getUsername().equals(user.getUsername())) {
-                throw new IllegalStateException("User with this user name already exists");
+            if (dbUser.isActive()) { // user is fully registered throw exception else we add/update and send verification mail again
+                if (dbUser.getEmail().equals(user.getEmail())) { //todo throw custom exceptions
+                    throw new IllegalStateException("User with this email already exists");
+                }
+                if (dbUser.getUsername().equals(user.getUsername())) {
+                    throw new IllegalStateException("User with this user name already exists");
+                }
             }
         }
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         userRepository.save(user);
+
         String token = UUID.randomUUID().toString();
-        // creating token with 15 expiry
+        // creating token with 15 mins expiry
         EmailToken emailToken = new EmailToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), user);
         emailTokenService.saveEmailToken(emailToken);
-
-//        TODO: SEND EMAIL
-
         return token;
     }
 
