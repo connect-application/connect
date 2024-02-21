@@ -30,8 +30,8 @@ public class LoginController {
     }
 
     @PostMapping("/change")
-    public void changePassword(@RequestBody ResetPasswordRequest request) {
-         loginService.changePassword(request);
+    public ChangePasswordResponse changePassword(@RequestBody ChangePasswordRequest request) {
+        return loginService.changePassword(request);
     }
 
 }

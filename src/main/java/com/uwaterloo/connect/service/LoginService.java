@@ -7,7 +7,6 @@ import com.uwaterloo.connect.repository.UserRepository;
 import com.uwaterloo.connect.utils.EmailBuilder;
 import com.uwaterloo.connect.utils.JwtUtils;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -73,18 +72,21 @@ public class LoginService {
                 .build();
     }
 
-    public void changePassword(ResetPasswordRequest request) {
+    public ChangePasswordResponse changePassword(ChangePasswordRequest request) {
         updatePassword(request.getEmail(), request.getNewPassword());
-        return ;
+        return ChangePasswordResponse.builder()
+                .email(request.getEmail())
+                .code("00")
+                .status("Password changed successfully")
+                .build();
     }
 
     public User updatePassword(String email,String newPassword){
         User user = (User) userService.loadUserByUsername(email);
         String encodedPassword = bCryptPasswordEncoder.encode(newPassword);
         user.setPassword(encodedPassword);
-        user.setUpdatedAt(LocalTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
         return userRepository.save(user);
-
     }
 }
 
