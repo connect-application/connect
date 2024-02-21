@@ -28,18 +28,14 @@ public class WebSecurityConfig {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AuthTokenFilter authTokenFilter;
 
-//    @Bean
-//    public AuthTokenFilter authenticationJwtTokenFilter() {
-//        return new AuthTokenFilter();
-//    }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/v*/signup/**").permitAll()
-                                .requestMatchers("/api/v*/login").permitAll()
+                                .requestMatchers("/api/v*/login/change").authenticated()
+                                .requestMatchers("/api/v*/login/**").permitAll()
                                 .anyRequest().authenticated()
                 );
 

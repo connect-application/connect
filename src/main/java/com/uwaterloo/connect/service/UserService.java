@@ -1,6 +1,6 @@
 package com.uwaterloo.connect.service;
 
-import com.uwaterloo.connect.model.EmailToken;
+import com.uwaterloo.connect.model.Token;
 import com.uwaterloo.connect.model.User;
 import com.uwaterloo.connect.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ public class UserService implements UserDetailsService {
     private final String USER_NOT_FOUND_ERROR = "User with email %s not found";
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final EmailTokenService emailTokenService;
+    private final TokenService tokenService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException { // used by spring security to find during authentication
@@ -48,8 +48,8 @@ public class UserService implements UserDetailsService {
 
         String token = UUID.randomUUID().toString();
         // creating token with 15 mins expiry
-        EmailToken emailToken = new EmailToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), user);
-        emailTokenService.saveEmailToken(emailToken);
+        Token dbToken = new Token(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), user);
+        tokenService.saveToken(dbToken);
         return token;
     }
 

@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Entity
-public class EmailToken {
+public class Token {
 
-    @SequenceGenerator(name = "email_token_sequence", sequenceName = "email_token_sequence", allocationSize = 1)
+    @SequenceGenerator(name = "token_sequence", sequenceName = "token_sequence", allocationSize = 1)
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "email_token_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "token_sequence")
     private Long id;
 
     @Column(nullable = false)
@@ -33,7 +33,7 @@ public class EmailToken {
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
-    public EmailToken(String token, LocalDateTime createdAt, LocalDateTime expiresAt, User user) {
+    public Token(String token, LocalDateTime createdAt, LocalDateTime expiresAt, User user) {
         this.token = token;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;

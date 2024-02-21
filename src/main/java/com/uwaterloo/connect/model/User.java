@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -36,6 +37,8 @@ public class User implements UserDetails {
     private boolean locked = false;
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+    private LocalTime createdAt = LocalTime.now();
+    private LocalTime updatedAt = LocalTime.now();
 
     public User(String firstName, String lastName, String userName, String email, String password, LocalDate dateOfBirth, UserRole userRole) {
         this.firstName = firstName;

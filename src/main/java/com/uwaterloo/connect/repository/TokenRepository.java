@@ -1,7 +1,7 @@
 package com.uwaterloo.connect.repository;
 
 
-import com.uwaterloo.connect.model.EmailToken;
+import com.uwaterloo.connect.model.Token;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,12 +14,12 @@ import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = true)
-public interface EmailTokenRepository extends JpaRepository<EmailToken, Long> {
+public interface TokenRepository extends JpaRepository<Token, Long> {
 
-    Optional<EmailToken> findByToken(String token);
+    Optional<Token> findByToken(String token);
 
     @Transactional
     @Modifying
-    @Query("UPDATE EmailToken c " + "SET c.confirmedAt = ?2 " + "WHERE c.token = ?1")
+    @Query("UPDATE Token c " + "SET c.confirmedAt = ?2 " + "WHERE c.token = ?1")
     int updateConfirmedAt(String token, LocalDateTime confirmedAt);
 }
