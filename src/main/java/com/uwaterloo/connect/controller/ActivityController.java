@@ -34,8 +34,8 @@ public class ActivityController {
     }
 
     @GetMapping("/rescheduleActivity")
-    public ResponseEntity<String> rescheduleActivity(@RequestParam(value = "activityId") Integer activityId,@RequestParam(value = "newStartTime") String newStartTime){
-        String result = activityService.updateActivityStartTime(activityId, newStartTime);
+    public ResponseEntity<String> rescheduleActivity(@RequestParam(value = "postId") Integer postId, @RequestParam(value = "newStartTime") String newStartTime){
+        String result = activityService.updateActivityStartTime(postId, newStartTime);
         if(SUCCESS.equals(result)){
             return ResponseEntity.ok().body(SUCCESS);
         }
@@ -45,8 +45,8 @@ public class ActivityController {
     }
 
     @GetMapping("/updateActivityStatus")
-    public ResponseEntity<String> updateActivityStatus(@RequestParam(value = "activityId") Integer activityId,@RequestParam(value = "newStartTime") Integer newStatus){
-        String result = activityService.updateActivityStatus(activityId, newStatus);
+    public ResponseEntity<String> updateActivityStatus(@RequestParam(value = "postId") Integer postId,@RequestParam(value = "newStartTime") Integer newStatus){
+        String result = activityService.updateActivityStatus(postId, newStatus);
         if(SUCCESS.equals(result)){
             return ResponseEntity.ok().body(SUCCESS);
         }

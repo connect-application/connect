@@ -5,12 +5,12 @@ create table post(postId serial PRIMARY KEY, userId INT NOT NULL, activityId INT
 create table post_comment(postId INT NOT NULL, commentText TEXT, FOREIGN KEY (postId) REFERENCES post(postId) ON DELETE CASCADE)
 
 CREATE TABLE ACTIVITIES (
-                            ACTID SERIAL primary key,
-                            CATEGORYID int NOT NULL,
-                            STATUSID int NOT NULL,
-                            START_TIME timestamp NOT NULL,
-                            END_TIME timestamp,
-                            ISRECURRING bool NOT NULL
+                            postid SERIAL primary key,
+                            categoryid int NOT NULL,
+                            statusid int NOT NULL,
+                            starttime timestamp NOT NULL,
+                            endtime timestamp,
+                            isrecurring bool NOT NULL
 );
 
 
@@ -25,8 +25,9 @@ CREATE TABLE ATTACHMENTS (
                              POSTID int NOT NULL,
                              FILE bytea
 );
+ALTER TABLE public.activities ADD CONSTRAINT activities_postId_fkey FOREIGN KEY (postId) REFERENCES post(postId) ON DELETE CASCADE;
 
-ALTER TABLE public.post ADD CONSTRAINT post_actid_fkey FOREIGN KEY (activityId) REFERENCES activities(actid) ON DELETE CASCADE;
+ALTER TABLE public.post ADD CONSTRAINT post_postid_fkey FOREIGN KEY (postId) REFERENCES activities(postId) ON DELETE CASCADE;
 ALTER TABLE public.attachments ADD CONSTRAINT attachments_postId_fkey FOREIGN KEY (postId) REFERENCES post(postId) ON DELETE CASCADE;
 
 ALTER TABLE public.likes ADD CONSTRAINT likes_postId_fkey FOREIGN KEY (postId) REFERENCES post(postId) ON DELETE CASCADE;

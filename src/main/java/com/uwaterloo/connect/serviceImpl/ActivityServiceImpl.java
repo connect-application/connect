@@ -22,11 +22,13 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public String createActivity(ActivityRequest activityRequest){
         try{
+            System.out.println(activityRequest.toString());
             Activity activity = new Activity();
             activity.setCategoryId(activityRequest.getCategoryId());
             activity.setStatusId(activityRequest.getStatusId());
-            activity.setStartTime(activityRequest.getStartTime());
-            activity.setEndTime(activityRequest.getEndTime());
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+            activity.setStartTime(LocalDateTime.parse(activityRequest.getStartTime(), formatter));
+            activity.setEndTime(LocalDateTime.parse(activityRequest.getEndTime(), formatter));
             activity.setRecurring(activityRequest.isRecurring());
             activityRepository.save(activity);
             return SUCCESS;
@@ -37,9 +39,9 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public String updateActivityStatus(Integer activityId, Integer newStatusId){
+    public String updateActivityStatus(Integer postId, Integer newStatusId){
         try{
-            Activity activity = activityRepository.findActivityByActivityId(activityId);
+            Activity activity = activityRepository.findActivityByPostId(postId);
             activity.setStatusId(newStatusId);
             activityRepository.save(activity);
             return SUCCESS;
@@ -50,9 +52,9 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public String updateActivityStartTime(Integer activityId, String newStartTime){
+    public String updateActivityStartTime(Integer postId, String newStartTime){
         try{
-            Activity activity = activityRepository.findActivityByActivityId(activityId);
+            Activity activity = activityRepository.findActivityByPostId(postId);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
             // Parse the string into a LocalDateTime object
             activity.setStartTime(LocalDateTime.parse(newStartTime, formatter));

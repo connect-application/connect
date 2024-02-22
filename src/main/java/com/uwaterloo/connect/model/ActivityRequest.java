@@ -1,16 +1,18 @@
 package com.uwaterloo.connect.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 
 public class ActivityRequest {
 
     private Integer categoryId;
     private Integer statusId;
-    private LocalDateTime startTime = LocalDateTime.now();
-    private LocalDateTime endTime;
-    private boolean isRecurring = false;
-    private boolean isShared = false;
-    private boolean isNotified = false;
+    private String startTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+    private String endTime;
+    private boolean recurring = false;
+    private boolean shared = false;
+    private boolean notified = false;
     private String postText;
     private byte[] fileContent;
 
@@ -22,24 +24,24 @@ public class ActivityRequest {
         return statusId;
     }
 
-    public LocalDateTime getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public LocalDateTime getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
     public boolean isRecurring() {
-        return isRecurring;
+        return recurring;
     }
 
     public boolean isShared() {
-        return isShared;
+        return shared;
     }
 
     public boolean isNotified() {
-        return isNotified;
+        return notified;
     }
 
     public String getPostText() {
@@ -48,5 +50,20 @@ public class ActivityRequest {
 
     public byte[] getFileContent() {
         return fileContent;
+    }
+
+    @Override
+    public String toString() {
+        return "ActivityRequest{" +
+                "categoryId=" + categoryId +
+                ", statusId=" + statusId +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", isRecurring=" + recurring +
+                ", isShared=" + shared +
+                ", isNotified=" + notified +
+                ", postText='" + postText + '\'' +
+                ", fileContent=" + Arrays.toString(fileContent) +
+                '}';
     }
 }

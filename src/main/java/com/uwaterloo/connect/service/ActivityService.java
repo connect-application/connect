@@ -7,6 +7,6 @@ import java.util.Map;
 
 public interface ActivityService {
     public String createActivity(ActivityRequest activityRequest);
-    public String updateActivityStatus(Integer activityId, Integer newStatusId);
-    public String updateActivityStartTime(Integer activityId, String newStartTime);
+    public String updateActivityStatus(Integer postId, Integer newStatusId);
+    public String updateActivityStartTime(Integer postId, String newStartTime);
 }

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer actId;
+    private Integer postId;
 
     private Integer categoryId;
 
@@ -22,12 +22,12 @@ public class Activity {
 
     private boolean isRecurring;
 
-    public Integer getActId() {
-        return actId;
+    public Integer getPostId() {
+        return postId;
     }
 
-    public void setActId(Integer actId) {
-        this.actId = actId;
+    public void setPostId(Integer postId) {
+        this.postId = postId;
     }
 
     public Integer getCategoryId() {

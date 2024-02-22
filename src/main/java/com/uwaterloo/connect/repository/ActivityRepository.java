@@ -11,8 +11,8 @@ import java.util.List;
 @Repository
 public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 
-    @Query("select a from Activity a where a.actId = :actId")
-    Activity findActivityByActivityId(@Param("actId") Integer actId);
+    @Query("select a from Activity a where a.postId = :postId")
+    Activity findActivityByPostId(@Param("postId") Integer postId);
 
 
 }
