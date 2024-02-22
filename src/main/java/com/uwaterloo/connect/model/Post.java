@@ -13,18 +13,17 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer postId;
     private Integer userId;
-
-    private Integer activityId;
-
     private String postText;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public Post(Integer userId, Integer activityId, String postText) {
+    private Boolean isPublic;
+
+    public Post(Integer userId, String postText, Boolean isPublic) {
         this.userId = userId;
-        this.activityId = activityId;
         this.postText = postText;
+        this.isPublic = isPublic;
     }
 
     public Post() {
@@ -47,13 +46,6 @@ public class Post {
         this.userId = userId;
     }
 
-    public Integer getActivityId() {
-        return activityId;
-    }
-
-    public void setActivityId(Integer activityId) {
-        this.activityId = activityId;
-    }
 
     public String getPostText() {
         return postText;
@@ -69,5 +61,13 @@ public class Post {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Boolean getIsPublic() {
+        return isPublic;
+    }
+
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic = isPublic;
     }
 }
