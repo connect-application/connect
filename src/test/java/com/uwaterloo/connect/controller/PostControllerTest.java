@@ -25,17 +25,19 @@ class PostControllerTest {
     @InjectMocks
     private PostController postController;
 
+    private static final Post post = new Post(1, "Post text", false);
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        Post post1 = new Post(1, "Post text 1", false);
-        Post post2 = new Post(1, "Post text 2", true);
-        Mockito.when(postRepository.findByUserId(Mockito.any()))
-                .thenReturn(List.of(post1, post2));
     }
 
     @Test
     void getUserPosts() {
+        Post post1 = new Post(1, "Post text 1", false);
+        Post post2 = new Post(1, "Post text 2", true);
+        Mockito.when(postRepository.findByUserId(Mockito.any()))
+                .thenReturn(List.of(post1, post2));
         List<Post> userPosts = postController.getUserPosts(1);
         assertEquals(userPosts.size(), 2);
     }
@@ -54,7 +56,6 @@ class PostControllerTest {
 
     @Test
     void editPostText() {
-        Post post = new Post(1, "Post text", false);
         Mockito.when(postRepository.findById(Mockito.any()))
                 .thenReturn(Optional.of(post));
         postController.editPostText(1, "New Post Text");
@@ -63,7 +64,6 @@ class PostControllerTest {
 
     @Test
     void deletePost() {
-        Post post = new Post(1, "Post text", false);
         Mockito.when(postRepository.findById(Mockito.any()))
                 .thenReturn(Optional.of(post));
         MutableBoolean deleted = new MutableBoolean(false);
@@ -77,7 +77,6 @@ class PostControllerTest {
 
     @Test
     void changePostVisibility() {
-        Post post = new Post(1, "Post text", false);
         Mockito.when(postRepository.findById(Mockito.any()))
                 .thenReturn(Optional.of(post));
         postController.changePostVisibility(1, true);

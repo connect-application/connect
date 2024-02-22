@@ -18,6 +18,7 @@ public class PostController {
 
     @GetMapping(GET_USER_POST)
     public List<Post> getUserPosts(@PathVariable(value = "userId") Integer userId) {
+        //TODO: Use LIMIT and OFFSET to return results in batches of say 10
         return postRepository.findByUserId(userId);
     }
 

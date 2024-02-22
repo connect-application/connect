@@ -12,10 +12,12 @@ public class PostComment {
     private Integer postId;
     private String commentText;
 
-    public PostComment(Integer commentId, Integer postId, String commentText) {
-        this.commentId = commentId;
+    private Integer userId;
+
+    public PostComment(Integer postId, String commentText, Integer userId) {
         this.postId = postId;
         this.commentText = commentText;
+        this.userId = userId;
     }
 
     public PostComment() {
@@ -44,5 +46,13 @@ public class PostComment {
 
     public void setCommentText(String commentText) {
         this.commentText = commentText;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }
