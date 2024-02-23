@@ -52,7 +52,7 @@ public class LoginService {
         Token dbToken = new Token(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), user);
         tokenService.saveToken(dbToken);
         //TODO change to frontend url
-        StringBuilder urlBuilder = new StringBuilder("http://localhost:8080/api/v1/login/reset");
+        StringBuilder urlBuilder = new StringBuilder("http://localhost:3000/api/v1/reset-password");
         urlBuilder.append("?token=").append(token);
         urlBuilder.append("&email=").append(request.getEmail());
         String mssg = "Please click on the below link to reset your password:";
