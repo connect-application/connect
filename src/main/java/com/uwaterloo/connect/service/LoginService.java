@@ -1,6 +1,7 @@
 package com.uwaterloo.connect.service;
 
 import com.uwaterloo.connect.dto.*;
+import com.uwaterloo.connect.enums.ResponseCodes;
 import com.uwaterloo.connect.model.Token;
 import com.uwaterloo.connect.model.User;
 import com.uwaterloo.connect.repository.UserRepository;
@@ -39,7 +40,7 @@ public class LoginService {
         return LoginResponse.builder()
                 .email(user.getEmail())
                 .jwtToken(jwtToken)
-                .code("00")
+                .code(ResponseCodes.SUCCESS.getCode())
                 .status("Login Successful")
                 .build();
     }
@@ -58,7 +59,7 @@ public class LoginService {
         emailSender.send(request.getEmail(), EmailBuilder.buildEmail(user.getFirstName(), urlBuilder.toString(), mssg));
         return ResetPasswordTokenResponse.builder()
                 .email(request.getEmail())
-                .code("00")
+                .code(ResponseCodes.SUCCESS.getCode())
                 .status("Reset email sent successfully")
                 .build();
     }
@@ -67,7 +68,7 @@ public class LoginService {
         updatePassword(request.getEmail(), request.getNewPassword());
         return ResetPasswordResponse.builder()
                 .email(request.getEmail())
-                .code("00")
+                .code(ResponseCodes.SUCCESS.getCode())
                 .status("Password reset successfully")
                 .build();
     }
@@ -76,7 +77,7 @@ public class LoginService {
         updatePassword(request.getEmail(), request.getNewPassword());
         return ChangePasswordResponse.builder()
                 .email(request.getEmail())
-                .code("00")
+                .code(ResponseCodes.SUCCESS.getCode())
                 .status("Password changed successfully")
                 .build();
     }

@@ -1,6 +1,7 @@
 package com.uwaterloo.connect.service;
 
 import com.uwaterloo.connect.dto.SignUpResponse;
+import com.uwaterloo.connect.enums.ResponseCodes;
 import com.uwaterloo.connect.enums.UserRole;
 import com.uwaterloo.connect.model.Token;
 import com.uwaterloo.connect.model.User;
@@ -17,10 +18,11 @@ public class SignUpService {
     private final UserService userService;
     private final EmailSender emailSender;
     private final TokenService tokenService;
+    private final InputValidator inputValidator;
 
     public SignUpResponse signUp(SignUpRequest request) {
         //TODO create custom exceptions
-        if (!InputValidator.emailValidator(request.getEmail())) {
+        if (!inputValidator.emailValidator(request.getEmail())) {
             throw new IllegalArgumentException("email not valid");
         }
         String token = userService.signUpUser(new User(request.getFirstName(), request.getLastName(), request.getUserName(), request.getEmail(), request.getPassword(), request.getDateOfBirth(), UserRole.USER));
@@ -29,7 +31,7 @@ public class SignUpService {
         emailSender.send(request.getEmail(), EmailBuilder.buildEmail(request.getFirstName(), link,mssg));
 
         return SignUpResponse.builder()
-                .code("00")
+                .code(ResponseCodes.SUCCESS.getCode())
                 .email(request.getEmail())
                 .status("Success!  Please, check your email for to complete your signup process")
                 .build();
