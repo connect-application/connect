@@ -1,6 +1,6 @@
 create table connect_user(userId serial PRIMARY KEY)--placeholder for now, actual table to be created by Joban
 
-create table post(postId serial PRIMARY KEY, userId INT NOT NULL, activityId INT, postText TEXT, FOREIGN KEY (userId) REFERENCES connect_user(userId) ON DELETE CASCADE);
+create table post(postId serial PRIMARY KEY, userId INT NOT NULL, activityId INT, postText TEXT, FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE);
 
 create table post_comment(postId INT NOT NULL, commentText TEXT, FOREIGN KEY (postId) REFERENCES post(postId) ON DELETE CASCADE)
 
@@ -39,4 +39,4 @@ ALTER TABLE post ADD COLUMN isPublic BOOLEAN DEFAULT TRUE;
 ALTER TABLE post DROP COLUMN activityId;
 
 ALTER TABLE post_comment ADD COLUMN userId INT NOT NULL,
-    ADD CONSTRAINT fk_userId FOREIGN KEY (userId) REFERENCES connect_user(userId);
+    ADD CONSTRAINT fk_userId FOREIGN KEY (userId) REFERENCES users(id);

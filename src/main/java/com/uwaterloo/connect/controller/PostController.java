@@ -26,7 +26,7 @@ public class PostController {
     public void addPost(@RequestParam(value = "postText") String postText,
                         @RequestParam(value = "userId") Integer userId,
                         @RequestParam(value = "isPublic") Boolean isPublic) {
-        //TODO: Use user repo to check if user exists
+        //TODO: Check if its the logged user
         Post post = new Post(userId, postText, isPublic);
         postRepository.save(post);
     }
