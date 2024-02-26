@@ -33,7 +33,8 @@ public class LoginService {
 
     public LoginResponse login(@RequestBody LoginRequest request) {
 
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = (User) authentication.getPrincipal();
         String jwtToken = jwtUtils.generateTokenFromUsername(user.getUsername());
@@ -51,8 +52,8 @@ public class LoginService {
         // creating token with 15 mins expiry
         Token dbToken = new Token(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(15), user);
         tokenService.saveToken(dbToken);
-        //TODO change to frontend url
-        StringBuilder urlBuilder = new StringBuilder("http://localhost:3000/api/v1/reset-password");
+        // TODO change to frontend url
+        StringBuilder urlBuilder = new StringBuilder("http://localhost:3000/reset-password");
         urlBuilder.append("?token=").append(token);
         urlBuilder.append("&email=").append(request.getEmail());
         String mssg = "Please click on the below link to reset your password:";
@@ -82,7 +83,7 @@ public class LoginService {
                 .build();
     }
 
-    public User updatePassword(String email,String newPassword){
+    public User updatePassword(String email, String newPassword) {
         User user = (User) userService.loadUserByUsername(email);
         String encodedPassword = bCryptPasswordEncoder.encode(newPassword);
         user.setPassword(encodedPassword);
@@ -90,5 +91,3 @@ public class LoginService {
         return userRepository.save(user);
     }
 }
-
-
