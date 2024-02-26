@@ -31,7 +31,7 @@ ALTER TABLE public.post ADD CONSTRAINT post_postid_fkey FOREIGN KEY (postId) REF
 ALTER TABLE public.attachments ADD CONSTRAINT attachments_postId_fkey FOREIGN KEY (postId) REFERENCES post(postId) ON DELETE CASCADE;
 
 ALTER TABLE public.likes ADD CONSTRAINT likes_postId_fkey FOREIGN KEY (postId) REFERENCES post(postId) ON DELETE CASCADE;
-ALTER TABLE public.likes ADD CONSTRAINT likes_user_fkey FOREIGN KEY (likedby) REFERENCES connect_user(userId) ON DELETE CASCADE;
+ALTER TABLE public.likes ADD CONSTRAINT likes_user_fkey FOREIGN KEY (likedby) REFERENCES users(id) ON DELETE CASCADE;
 
 ALTER TABLE post_comment ADD COLUMN commentId SERIAL PRIMARY KEY;
 ALTER TABLE post ADD COLUMN createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP;

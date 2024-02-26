@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Table(name = "activities")
 public class Activity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer postId;
 
     private Integer categoryId;

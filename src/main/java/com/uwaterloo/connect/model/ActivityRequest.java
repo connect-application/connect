@@ -2,19 +2,20 @@ package com.uwaterloo.connect.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
+import java.util.List;
 
 public class ActivityRequest {
 
     private Integer categoryId;
     private Integer statusId;
+    private Integer userId;
     private String startTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
     private String endTime;
     private boolean recurring = false;
     private boolean shared = false;
     private boolean notified = false;
     private String postText;
-    private byte[] fileContent;
+    private List<byte[]> files;
 
     public Integer getCategoryId() {
         return categoryId;
@@ -23,6 +24,8 @@ public class ActivityRequest {
     public Integer getStatusId() {
         return statusId;
     }
+
+    public Integer getUserId(){ return userId; }
 
     public String getStartTime() {
         return startTime;
@@ -48,8 +51,8 @@ public class ActivityRequest {
         return postText;
     }
 
-    public byte[] getFileContent() {
-        return fileContent;
+    public List<byte[]> getFiles() {
+        return files;
     }
 
     @Override
@@ -57,13 +60,13 @@ public class ActivityRequest {
         return "ActivityRequest{" +
                 "categoryId=" + categoryId +
                 ", statusId=" + statusId +
+                ", userID=" + userId+
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", isRecurring=" + recurring +
                 ", isShared=" + shared +
                 ", isNotified=" + notified +
                 ", postText='" + postText + '\'' +
-                ", fileContent=" + Arrays.toString(fileContent) +
                 '}';
     }
 }
