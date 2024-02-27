@@ -22,14 +22,17 @@ public class LikeController {
     @PostMapping(TOGGLE_POST_LIKE)
     public String togglePostLike(@RequestParam("postId") Integer postId, @RequestParam(value = "userId") Integer userId){
         try{
+            String action = "";
             Like like = likeRepository.findUserLikeOnPost(postId, userId);
             if(Objects.isNull(like)){
                 likeRepository.save(new Like(postId, userId));
+                action = ": Liked";
             }
             else{
                 likeRepository.delete(like);
+                action = ": unliked";
             }
-            return SUCCESS;
+            return SUCCESS+action;
         }
         catch (Exception e){
             return ERROR+e;
