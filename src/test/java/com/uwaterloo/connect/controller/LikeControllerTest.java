@@ -36,7 +36,7 @@ public class LikeControllerTest {
         when(likeRepository.findUserLikeOnPost(any(), any())).thenReturn(null);
         String result = likeController.togglePostLike(1, 1);
         verify(likeRepository, times(1)).save(any(Like.class));
-        assertEquals("SUCCESS", result);
+        assertEquals("SUCCESS: Liked", result);
     }
 
     @Test
@@ -46,7 +46,7 @@ public class LikeControllerTest {
         String result = likeController.togglePostLike(1, 1);
 
         verify(likeRepository, times(1)).delete(any(Like.class));
-        assertEquals("SUCCESS", result);
+        assertEquals("SUCCESS: unliked", result);
     }
 
     @Test
