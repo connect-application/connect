@@ -1,7 +1,10 @@
 package com.uwaterloo.connect.controller;
 
+import com.uwaterloo.connect.model.Post;
 import com.uwaterloo.connect.model.PostComment;
 import com.uwaterloo.connect.repository.CommentRepository;
+import com.uwaterloo.connect.repository.PostRepository;
+import com.uwaterloo.connect.security.UserActionAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,15 +21,26 @@ public class CommentController {
     @Autowired
     CommentRepository commentRepository;
 
+    @Autowired
+    PostRepository postRepository;
+
+    @Autowired
+    UserActionAuthenticator userActionAuthenticator;
+
     @PostMapping(GET_COMMENTS)
     public List<PostComment> getPostComments(@RequestParam(value = "postId") Integer postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+        userActionAuthenticator.checkIfAuthorized(post.getUserId());
         return commentRepository.findByPostId(postId);
     }
 
     @PostMapping(ADD_COMMENT)
     public void addComment(@RequestParam(value = "postId") Integer postId,
                            @RequestParam(value = "commentText") String commentText,
-                           @RequestParam(value = "userId") Integer userId) {//TODO: get user from current session
+                           @RequestParam(value = "userId") Integer userId) {
+        //TODO: get user from current session
+        userActionAuthenticator.checkIfAuthorized(userId);
         PostComment comment = new PostComment(postId, commentText, userId);
         commentRepository.save(comment);
     }
@@ -34,9 +48,9 @@ public class CommentController {
     @PostMapping(EDIT_COMMENT)
     public void editComment(@RequestParam(value = "commentId") Integer commentId,
                            @RequestParam(value = "commentText") String commentText) {
-        //TODO: Check if the original user is editing
         PostComment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found for id: " + commentId));
+        userActionAuthenticator.checkIfAuthorized(comment.getUserId());
         comment.setCommentText(commentText);
         commentRepository.save(comment);
     }
@@ -45,6 +59,7 @@ public class CommentController {
     public void deleteComment(@RequestParam(value = "commentId") Integer commentId) {
         PostComment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found for id: " + commentId));
+        userActionAuthenticator.checkIfAuthorized(comment.getUserId());
         commentRepository.delete(comment);
     }
 }
