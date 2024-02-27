@@ -1,7 +1,10 @@
 package com.uwaterloo.connect.controller;
 
+import com.uwaterloo.connect.model.Post;
 import com.uwaterloo.connect.model.PostComment;
 import com.uwaterloo.connect.repository.CommentRepository;
+import com.uwaterloo.connect.repository.PostRepository;
+import com.uwaterloo.connect.security.UserActionAuthenticator;
 import org.hibernate.internal.util.MutableBoolean;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +25,12 @@ class CommentControllerTest {
     @Mock
     private CommentRepository commentRepository;
 
+    @Mock
+    private UserActionAuthenticator userActionAuthenticator;
+
+    @Mock
+    private PostRepository postRepository;
+
     @InjectMocks
     private CommentController commentController;
 
@@ -36,6 +45,8 @@ class CommentControllerTest {
     void getPostComments() {
         Mockito.when(commentRepository.findByPostId(Mockito.any()))
                 .thenReturn(List.of(comment));
+        Post post = new Post();
+        Mockito.when(postRepository.findById(Mockito.any())).thenReturn(Optional.of(post));
         List<PostComment> comments = commentController.getPostComments(1);
         assertEquals(comments.size(), 1);
     }
