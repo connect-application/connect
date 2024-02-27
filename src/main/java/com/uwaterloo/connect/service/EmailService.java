@@ -27,7 +27,7 @@ public class EmailService implements EmailSender{
             helper.setText(email, true);
             helper.setTo(to);
             helper.setSubject("Confirm your email");
-            helper.setFrom("ConnectApp@no-reply.com");
+            helper.setFrom("connect.app.reach@gmail.com");
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("Failed to send email", e);
