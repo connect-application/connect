@@ -69,4 +69,44 @@ public class ActivityRequest {
                 ", postText='" + postText + '\'' +
                 '}';
     }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public void setStatusId(Integer statusId) {
+        this.statusId = statusId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setRecurring(boolean recurring) {
+        this.recurring = recurring;
+    }
+
+    public void setShared(boolean shared) {
+        this.shared = shared;
+    }
+
+    public void setNotified(boolean notified) {
+        this.notified = notified;
+    }
+
+    public void setPostText(String postText) {
+        this.postText = postText;
+    }
+
+    public void setFiles(List<byte[]> files) {
+        this.files = files;
+    }
 }

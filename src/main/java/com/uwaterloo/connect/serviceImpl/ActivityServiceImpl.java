@@ -40,7 +40,6 @@ public class ActivityServiceImpl implements ActivityService {
             Integer postId = createPostForActivity(activityRequest);
             //Save attachments
             createAttachmentsforPost(postId, activityRequest.getFiles());
-            System.out.println("act: "+postId);
             //Make activity for the new post
             Activity activity = new Activity();
             activity.setPostId(postId);
@@ -63,7 +62,6 @@ public class ActivityServiceImpl implements ActivityService {
         try{
             Post post = new Post(activityRequest.getUserId(), activityRequest.getPostText(), activityRequest.isShared());
             postRepository.save(post);
-            System.out.println(post.getPostId());
             return post.getPostId();
         }catch(Exception e){
             return null;

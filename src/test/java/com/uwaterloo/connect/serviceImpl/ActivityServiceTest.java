@@ -1,6 +1,7 @@
 package com.uwaterloo.connect.serviceImpl;
 import com.uwaterloo.connect.model.Activity;
 import com.uwaterloo.connect.model.ActivityRequest;
+import com.uwaterloo.connect.model.Attachment;
 import com.uwaterloo.connect.model.Post;
 import com.uwaterloo.connect.repository.ActivityRepository;
 import com.uwaterloo.connect.repository.AttachmentRepository;
@@ -14,6 +15,8 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,24 +44,50 @@ public class ActivityServiceTest {
         MockitoAnnotations.initMocks(this);
     }
 
-//    @Test
-//    public void testCreateActivity() {
-//        // Prepare data
-//        ActivityRequest activityRequest = new ActivityRequest();
-//        // Set up activityRequest data
-//
-//        // Mock behavior
-//        when(postRepository.save(any(Post.class))).thenReturn(new Post());
-//        when(activityRepository.save(any(Activity.class))).thenReturn(new Activity());
-//
-//        // Call the method
-//        String result = activityService.createActivity(activityRequest);
-//
-//        // Verify the result
-//        assertEquals("SUCCESS", result);
-//        verify(postRepository, times(1)).save(any(Post.class));
-//        verify(activityRepository, times(1)).save(any(Activity.class));
-//    }
+    @Test
+    public void testCreateActivity_Success() {
+        // Prepare data
+        ActivityRequest activityRequest = new ActivityRequest();
+        activityRequest.setUserId(1); // Set user ID
+        activityRequest.setPostText("Test post"); // Set post text
+        activityRequest.setShared(true); // Set shared status
+        activityRequest.setCategoryId(1); // Set category ID
+        activityRequest.setStatusId(1); // Set status ID
+        activityRequest.setRecurring(false); // Set recurring status
+        activityRequest.setStartTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")));
+        activityRequest.setEndTime(LocalDateTime.now().plusHours(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")));
+        List<byte[]> files = new ArrayList<>();
+        // Add file content to the list
+        files.add(new byte[] { 1, 2, 3 });
+        activityRequest.setFiles(files);
+
+        // Mock behavior of dependencies
+        when(postRepository.save(any(Post.class))).thenReturn(new Post());
+        when(attachmentRepository.save(any(Attachment.class))).thenReturn(new Attachment());
+        when(activityRepository.save(any(Activity.class))).thenReturn(new Activity());
+
+        // Call the method
+        String result = activityService.createActivity(activityRequest);
+
+        // Verify the result
+        assertEquals("SUCCESS", result);
+        verify(postRepository, times(1)).save(any(Post.class));
+        verify(attachmentRepository, times(files.size())).save(any(Attachment.class));
+        verify(activityRepository, times(1)).save(any(Activity.class));
+    }
+
+    @Test
+    public void testCreateActivity_Exception() {
+        ActivityRequest activityRequest = new ActivityRequest();
+        when(activityService.createPostForActivity(activityRequest)).thenThrow(new RuntimeException());
+        String result = activityService.createActivity(activityRequest);
+
+        // Verify the result
+        assertEquals("ERROR: java.lang.NullPointerException: text", result);
+        verify(postRepository, times(1)).save(any(Post.class));
+        verify(attachmentRepository, never()).save(any(Attachment.class));
+        verify(activityRepository, never()).save(any(Activity.class));
+    }
 
     @Test
     public void testUpdateActivityStatus() {
