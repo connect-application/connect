@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.UUID;
 
 @Service
@@ -66,6 +65,7 @@ public class LoginService {
     }
 
     public ResetPasswordResponse resetPassword(ResetPasswordRequest request) {
+        tokenService.confirmToken(request.getToken());
         updatePassword(request.getEmail(), request.getNewPassword());
         return ResetPasswordResponse.builder()
                 .email(request.getEmail())

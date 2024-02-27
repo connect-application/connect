@@ -30,7 +30,7 @@ public class UserService implements UserDetailsService {
     }
 
     public String signUpUser(User user) {
-        Optional<User> optionalUser = userRepository.findByUsernameOrEmail(user.getEmail(), user.getUsername());
+        Optional<User> optionalUser = userRepository.findByUsernameOrEmail(user.getUsername(), user.getEmail());
         if (optionalUser.isPresent()) {
             User dbUser = optionalUser.get();
             if (dbUser.isActive()) { // user is fully registered throw exception else we add/update and send verification mail again

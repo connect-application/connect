@@ -25,7 +25,7 @@ public class LoginController {
     }
 
     @PostMapping("/reset")
-    public ResetPasswordResponse resetPasswordToken(@RequestBody ResetPasswordRequest request) {
+    public ResetPasswordResponse resetPassword(@RequestBody ResetPasswordRequest request) {
         return loginService.resetPassword(request);
     }
 
