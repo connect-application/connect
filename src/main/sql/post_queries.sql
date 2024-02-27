@@ -40,3 +40,11 @@ ALTER TABLE post DROP COLUMN activityId;
 
 ALTER TABLE post_comment ADD COLUMN userId INT NOT NULL,
     ADD CONSTRAINT fk_userId FOREIGN KEY (userId) REFERENCES users(id);
+
+CREATE TABLE public.follow (
+                               userId int4 NOT NULL,
+                               followedBy int4 NOT NULL,
+                               CONSTRAINT follow_pkey PRIMARY KEY (userId, followedBy)
+);
+ALTER TABLE public.follow ADD CONSTRAINT follow_user_fkey FOREIGN KEY (userId) REFERENCES public.users(id) ON DELETE CASCADE;
+ALTER TABLE public.follow ADD CONSTRAINT follow_followed_fkey FOREIGN KEY (followedBy) REFERENCES public.users(id) ON DELETE CASCADE;
