@@ -27,7 +27,6 @@ CREATE TABLE ATTACHMENTS (
 );
 ALTER TABLE public.activities ADD CONSTRAINT activities_postId_fkey FOREIGN KEY (postId) REFERENCES post(postId) ON DELETE CASCADE;
 
-ALTER TABLE public.post ADD CONSTRAINT post_postid_fkey FOREIGN KEY (postId) REFERENCES activities(postId) ON DELETE CASCADE;
 ALTER TABLE public.attachments ADD CONSTRAINT attachments_postId_fkey FOREIGN KEY (postId) REFERENCES post(postId) ON DELETE CASCADE;
 
 ALTER TABLE public.likes ADD CONSTRAINT likes_postId_fkey FOREIGN KEY (postId) REFERENCES post(postId) ON DELETE CASCADE;

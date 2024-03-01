@@ -30,7 +30,6 @@ public class PostController {
     public List<Post> getUserPosts(@PathVariable(value = "userId") Integer userId) {
         //TODO: Use LIMIT and OFFSET to return results in batches of say 10
         //TODO: Check if userId == currUser or follows(currUser, userId)
-//        return postRepository.findByUserId(userId);
         return postRepository.findByUserIdAndIsPublic(userId, true);
     }
 
