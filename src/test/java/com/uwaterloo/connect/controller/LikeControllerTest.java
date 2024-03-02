@@ -1,7 +1,9 @@
 package com.uwaterloo.connect.controller;
 
 import com.uwaterloo.connect.model.Like;
+import com.uwaterloo.connect.model.User;
 import com.uwaterloo.connect.repository.LikeRepository;
+import com.uwaterloo.connect.security.UserActionAuthenticator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -25,6 +27,9 @@ public class LikeControllerTest {
     @InjectMocks
     private LikeController likeController;
 
+    @Mock
+    private UserActionAuthenticator userActionAuthenticator;
+
     private static final Like like = new Like(33, 1);
 
     @BeforeEach
@@ -34,7 +39,10 @@ public class LikeControllerTest {
     @Test
     public void testTogglePostLike() {
         when(likeRepository.findUserLikeOnPost(any(), any())).thenReturn(null);
-        String result = likeController.togglePostLike(1, 1);
+        User user = new User();
+        user.setId(123L);
+        when(userActionAuthenticator.getLoggedUser()).thenReturn(user);
+        String result = likeController.togglePostLike(1);
         verify(likeRepository, times(1)).save(any(Like.class));
         assertEquals("SUCCESS: Liked", result);
     }
@@ -42,8 +50,10 @@ public class LikeControllerTest {
     @Test
     public void testTogglePostUnLike() {
         when(likeRepository.findUserLikeOnPost(any(), any())).thenReturn(new Like(1, 1));
-
-        String result = likeController.togglePostLike(1, 1);
+        User user = new User();
+        user.setId(123L);
+        when(userActionAuthenticator.getLoggedUser()).thenReturn(user);
+        String result = likeController.togglePostLike(1);
 
         verify(likeRepository, times(1)).delete(any(Like.class));
         assertEquals("SUCCESS: unliked", result);

@@ -7,6 +7,7 @@ import com.uwaterloo.connect.model.Post;
 import com.uwaterloo.connect.repository.ActivityRepository;
 import com.uwaterloo.connect.repository.AttachmentRepository;
 import com.uwaterloo.connect.repository.PostRepository;
+import com.uwaterloo.connect.security.UserActionAuthenticator;
 import com.uwaterloo.connect.service.ActivityService;
 import com.uwaterloo.connect.service.PostEngine;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class ActivityServiceImpl implements ActivityService {
     @Autowired
     PostEngine postEngine;
 
+    @Autowired
+    UserActionAuthenticator userActionAuthenticator;
+
     @Override
     public String createActivity(ActivityRequest activityRequest){
         try{
@@ -64,7 +68,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
     public Integer createPostForActivity(ActivityRequest activityRequest){
         try{
-            Post post = postEngine.createPost(activityRequest.getUserId(), activityRequest.getPostText(), activityRequest.isShared());
+            Post post = postEngine.createPost(userActionAuthenticator.getLoggedUser().getId().intValue(), activityRequest.getPostText(), activityRequest.isShared());
             postRepository.save(post);
             return post.getPostId();
         }catch(Exception e){

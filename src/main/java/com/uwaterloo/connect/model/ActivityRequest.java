@@ -8,7 +8,6 @@ public class ActivityRequest {
 
     private Integer categoryId;
     private Integer statusId;
-    private Integer userId;
     private String startTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
     private String endTime;
     private boolean recurring = false;
@@ -24,8 +23,6 @@ public class ActivityRequest {
     public Integer getStatusId() {
         return statusId;
     }
-
-    public Integer getUserId(){ return userId; }
 
     public String getStartTime() {
         return startTime;
@@ -60,7 +57,6 @@ public class ActivityRequest {
         return "ActivityRequest{" +
                 "categoryId=" + categoryId +
                 ", statusId=" + statusId +
-                ", userID=" + userId+
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", isRecurring=" + recurring +
@@ -76,10 +72,6 @@ public class ActivityRequest {
 
     public void setStatusId(Integer statusId) {
         this.statusId = statusId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public void setStartTime(String startTime) {

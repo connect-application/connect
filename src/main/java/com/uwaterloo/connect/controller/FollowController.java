@@ -2,6 +2,7 @@ package com.uwaterloo.connect.controller;
 
 import com.uwaterloo.connect.model.Follow;
 import com.uwaterloo.connect.repository.FollowRepository;
+import com.uwaterloo.connect.security.UserActionAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +21,13 @@ public class FollowController {
     @Autowired
     FollowRepository followRepository;
 
+    @Autowired
+    UserActionAuthenticator userActionAuthenticator;
+
     @PostMapping(TOGGLE_FOLLOW)
-    public String toggleFollow(@RequestParam("userId") Integer userId, @RequestParam("toFollow") Integer toFollowId){
+    public String toggleFollow(@RequestParam("toFollow") Integer toFollowId){
         try{
+            Integer userId = userActionAuthenticator.getLoggedUser().getId().intValue();
             String action = "";
             Follow follow = followRepository.findFollow(userId, toFollowId);
             if(Objects.isNull(follow)){
