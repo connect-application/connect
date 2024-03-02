@@ -8,6 +8,7 @@ import com.uwaterloo.connect.repository.ActivityRepository;
 import com.uwaterloo.connect.repository.AttachmentRepository;
 import com.uwaterloo.connect.repository.PostRepository;
 import com.uwaterloo.connect.service.ActivityService;
+import com.uwaterloo.connect.service.PostEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,9 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Autowired
     AttachmentRepository attachmentRepository;
+
+    @Autowired
+    PostEngine postEngine;
 
     @Override
     public String createActivity(ActivityRequest activityRequest){
@@ -60,7 +64,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
     public Integer createPostForActivity(ActivityRequest activityRequest){
         try{
-            Post post = new Post(activityRequest.getUserId(), activityRequest.getPostText(), activityRequest.isShared());
+            Post post = postEngine.createPost(activityRequest.getUserId(), activityRequest.getPostText(), activityRequest.isShared());
             postRepository.save(post);
             return post.getPostId();
         }catch(Exception e){
