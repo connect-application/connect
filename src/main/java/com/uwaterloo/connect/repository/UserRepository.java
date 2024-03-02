@@ -24,4 +24,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "UPDATE User a SET a.active = TRUE, a.updatedAt = :updatedAt WHERE a.email = :email")
     int enableUser(String email, LocalDateTime updatedAt);
 
+    User findUserById(Integer userId);
+
 }
