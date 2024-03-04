@@ -4,6 +4,7 @@ import com.uwaterloo.connect.model.Post;
 import com.uwaterloo.connect.model.User;
 import com.uwaterloo.connect.repository.PostRepository;
 import com.uwaterloo.connect.security.UserActionAuthenticator;
+import com.uwaterloo.connect.service.PostEngine;
 import org.hibernate.internal.util.MutableBoolean;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,11 +12,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.uwaterloo.connect.Constants.Constants.SUCCESS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -26,6 +29,9 @@ class PostControllerTest {
 
     @Mock
     private UserActionAuthenticator userActionAuthenticator;
+
+    @Mock
+    private PostEngine postEngine;
 
     @InjectMocks
     private PostController postController;
@@ -71,16 +77,19 @@ class PostControllerTest {
                     savedPosts.add((Post) i.getArguments()[0]);
                     return i.getArguments()[0];
                 });
-        postController.addPost("This a post", 1, true);
+        Mockito.when(postEngine.createPost(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(new Post());
+        ResponseEntity<String> response = postController.addPost("This a post", true);
         assertEquals(savedPosts.size(), 1);
+        assertEquals(response.getBody(), SUCCESS);
     }
 
     @Test
     void editPostText() {
         Mockito.when(postRepository.findById(Mockito.any()))
                 .thenReturn(Optional.of(post));
-        postController.editPostText(1, "New Post Text");
+        ResponseEntity<String> response = postController.editPostText(1, "New Post Text");
         assertEquals(post.getPostText(), "New Post Text");
+        assertEquals(response.getBody(), SUCCESS);
     }
 
     @Test
@@ -92,16 +101,18 @@ class PostControllerTest {
             deleted.setValue(true);
             return i.getArguments()[0];
         }).when(postRepository).delete(Mockito.any());
-        postController.deletePost(1);
+        ResponseEntity<String> response = postController.deletePost(1);
         assertTrue(deleted.getValue());
+        assertEquals(response.getBody(), SUCCESS);
     }
 
     @Test
     void changePostVisibility() {
         Mockito.when(postRepository.findById(Mockito.any()))
                 .thenReturn(Optional.of(post));
-        postController.changePostVisibility(1, true);
+        ResponseEntity<String> response = postController.changePostVisibility(1, true);
         assertEquals(post.getIsPublic(), true);
+        assertEquals(response.getBody(), SUCCESS);
     }
 
 }

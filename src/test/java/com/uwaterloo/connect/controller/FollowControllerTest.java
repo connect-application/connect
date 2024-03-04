@@ -1,6 +1,8 @@
 package com.uwaterloo.connect.controller;
 import com.uwaterloo.connect.model.Follow;
+import com.uwaterloo.connect.model.User;
 import com.uwaterloo.connect.repository.FollowRepository;
+import com.uwaterloo.connect.security.UserActionAuthenticator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,6 +25,9 @@ public class FollowControllerTest {
     @Mock
     private FollowRepository followRepository;
 
+    @Mock
+    private UserActionAuthenticator userActionAuthenticator;
+
     @InjectMocks
     private FollowController followController;
 
@@ -38,9 +43,12 @@ public class FollowControllerTest {
         Integer toFollowId = 456;
         Follow follow = new Follow(toFollowId, userId);
         when(followRepository.findFollow(userId, toFollowId)).thenReturn(follow);
+        User user = new User();
+        user.setId(123L);
+        when(userActionAuthenticator.getLoggedUser()).thenReturn(user);
 
         // Call the method
-        String response = followController.toggleFollow(userId, toFollowId);
+        String response = followController.toggleFollow(toFollowId);
 
         // Verify the response
         assertEquals("SUCCESS: Unfollowed", response);
