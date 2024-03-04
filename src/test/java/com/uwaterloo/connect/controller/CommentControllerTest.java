@@ -2,6 +2,7 @@ package com.uwaterloo.connect.controller;
 
 import com.uwaterloo.connect.model.Post;
 import com.uwaterloo.connect.model.PostComment;
+import com.uwaterloo.connect.model.User;
 import com.uwaterloo.connect.repository.CommentRepository;
 import com.uwaterloo.connect.repository.PostRepository;
 import com.uwaterloo.connect.security.UserActionAuthenticator;
@@ -38,6 +39,9 @@ class CommentControllerTest {
 
     private static final PostComment comment = new PostComment(1, "Comment", 1);
 
+    private final User user = new User("", "", "", "", "", null, null);
+
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -61,7 +65,10 @@ class CommentControllerTest {
                     savedComments.add((PostComment) i.getArguments()[0]);
                     return i.getArguments()[0];
                 });
-        ResponseEntity<String> response = commentController.addComment(1, "Comment", 1);
+        user.setId(2L);
+        Mockito.when(userActionAuthenticator.getLoggedUser())
+                .thenReturn(user);
+        ResponseEntity<String> response = commentController.addComment(1, "Comment");
         assertEquals(savedComments.size(), 1);
         assertEquals(response.getBody(), SUCCESS);
     }

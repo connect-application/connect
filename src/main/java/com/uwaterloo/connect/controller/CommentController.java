@@ -39,10 +39,8 @@ public class CommentController {
 
     @PostMapping(ADD_COMMENT)
     public ResponseEntity<String> addComment(@RequestParam(value = "postId") Integer postId,
-                                             @RequestParam(value = "commentText") String commentText,
-                                             @RequestParam(value = "userId") Integer userId) {
-        //TODO: get user from current session
-        userActionAuthenticator.checkIfAuthorized(userId);
+                                             @RequestParam(value = "commentText") String commentText) {
+        Integer userId = userActionAuthenticator.getLoggedUser().getId().intValue();
         PostComment comment = new PostComment(postId, commentText, userId);
         commentRepository.save(comment);
         return ResponseEntity.ok().body(SUCCESS);

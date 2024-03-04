@@ -41,11 +41,9 @@ public class PostController {
 
     @PostMapping(ADD_POST)
     public ResponseEntity<String> addPost(@RequestParam(value = "postText") String postText,
-                                          @RequestParam(value = "userId") Integer userId,
                                           @RequestParam(value = "isPublic") Boolean isPublic) {
-        //TODO: Consider removing the userId param
-        userActionAuthenticator.checkIfAuthorized(userId);
-        Post post = postEngine.createPost(userId, postText, isPublic);
+        Post post = postEngine.createPost(
+                userActionAuthenticator.getLoggedUser().getId().intValue(), postText, isPublic);
         postRepository.save(post);
         return ResponseEntity.ok().body(SUCCESS);
     }
