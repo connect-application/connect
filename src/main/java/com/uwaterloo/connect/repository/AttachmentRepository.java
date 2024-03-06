@@ -12,8 +12,7 @@ import java.util.List;
 @Repository
 public interface AttachmentRepository extends JpaRepository<Attachment, Integer> {
 
-    @Query("select a from Attachment a where a.postId= :postId")
-    List<Attachment> findAttachmentByPostId(@Param("postId") Integer postId);
+    List<Attachment> findAttachmentByPostId(Integer postId);
 
     @Query("select a.postId from Attachment a where a.attachmentId= :attachmentId")
     Integer findPostIdByAttachment(@Param("attachmentId") Integer attachmentId);

@@ -8,7 +8,6 @@ public class ActivityRequest {
 
     private Integer categoryId;
     private Integer statusId;
-    private Integer userId;
     private String startTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
     private String endTime;
     private boolean recurring = false;
@@ -24,8 +23,6 @@ public class ActivityRequest {
     public Integer getStatusId() {
         return statusId;
     }
-
-    public Integer getUserId(){ return userId; }
 
     public String getStartTime() {
         return startTime;
@@ -60,7 +57,6 @@ public class ActivityRequest {
         return "ActivityRequest{" +
                 "categoryId=" + categoryId +
                 ", statusId=" + statusId +
-                ", userID=" + userId+
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 ", isRecurring=" + recurring +
@@ -68,5 +64,41 @@ public class ActivityRequest {
                 ", isNotified=" + notified +
                 ", postText='" + postText + '\'' +
                 '}';
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public void setStatusId(Integer statusId) {
+        this.statusId = statusId;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setRecurring(boolean recurring) {
+        this.recurring = recurring;
+    }
+
+    public void setShared(boolean shared) {
+        this.shared = shared;
+    }
+
+    public void setNotified(boolean notified) {
+        this.notified = notified;
+    }
+
+    public void setPostText(String postText) {
+        this.postText = postText;
+    }
+
+    public void setFiles(List<byte[]> files) {
+        this.files = files;
     }
 }

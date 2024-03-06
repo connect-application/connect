@@ -23,70 +23,49 @@ public class ActivityController {
     @Autowired
     ActivityService activityService;
 
-    @GetMapping(ADD_ACTIVITY)
+    public ResponseEntity<String> returnFromController(String result){
+        if(SUCCESS.equals(result)){
+            return ResponseEntity.ok().body(SUCCESS);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+    }
+
+    @PostMapping(ADD_ACTIVITY)
     public ResponseEntity<String> addActivity(@RequestBody ActivityRequest activityRequest){
         String result = activityService.createActivity(activityRequest);
-        if(SUCCESS.equals(result)){
-            return ResponseEntity.ok().body(SUCCESS);
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
-        }
+        return returnFromController(result);
     }
 
-    @GetMapping(RESCHEDULE_ACTIVITY)
+    @PostMapping(RESCHEDULE_ACTIVITY)
     public ResponseEntity<String> rescheduleActivity(@RequestParam(value = "postId") Integer postId, @RequestParam(value = "newStartTime") String newStartTime){
         String result = activityService.updateActivityStartTime(postId, newStartTime);
-        if(SUCCESS.equals(result)){
-            return ResponseEntity.ok().body(SUCCESS);
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
-        }
+        return returnFromController(result);
     }
 
-    @GetMapping(UPDATE_ACTIVITY_STATUS)
+    @PostMapping(UPDATE_ACTIVITY_STATUS)
     public ResponseEntity<String> updateActivityStatus(@RequestParam(value = "postId") Integer postId,@RequestParam(value = "newStartTime") Integer newStatus){
         String result = activityService.updateActivityStatus(postId, newStatus);
-        if(SUCCESS.equals(result)){
-            return ResponseEntity.ok().body(SUCCESS);
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
-        }
+        return returnFromController(result);
     }
 
-    @GetMapping(UPDATE_ACTIVITY_CATEGORY)
+    @PostMapping(UPDATE_ACTIVITY_CATEGORY)
     public ResponseEntity<String> updateActivityCategory(@RequestParam(value = "postId") Integer postId,@RequestParam(value = "newCategory") Integer newCategory){
         String result = activityService.updateActivityCategory(postId, newCategory);
-        if(SUCCESS.equals(result)){
-            return ResponseEntity.ok().body(SUCCESS);
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
-        }
+        return returnFromController(result);
     }
 
-    @GetMapping(UPDATE_ACTIVITY_RECURRENCE)
+    @PostMapping(UPDATE_ACTIVITY_RECURRENCE)
     public ResponseEntity<String> updateActivityRecurrence(@RequestParam(value = "postId") Integer postId){
         String result = activityService.updateActivityRecurrence(postId);
-        if(SUCCESS.equals(result)){
-            return ResponseEntity.ok().body(SUCCESS);
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
-        }
+        return returnFromController(result);
     }
 
-    @GetMapping(DELETE_ACTIVITY)
+    @PostMapping(DELETE_ACTIVITY)
     public ResponseEntity<String> deleteActivity(@RequestParam(value = "postId") Integer postId){
         String result = activityService.deleteActivity(postId);
-        if(SUCCESS.equals(result)){
-            return ResponseEntity.ok().body(SUCCESS);
-        }
-        else{
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
-        }
+        return returnFromController(result);
     }
 
 }

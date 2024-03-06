@@ -2,6 +2,7 @@ package com.uwaterloo.connect.controller;
 
 import com.uwaterloo.connect.model.Like;
 import com.uwaterloo.connect.repository.LikeRepository;
+import com.uwaterloo.connect.security.UserActionAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +20,14 @@ public class LikeController {
     @Autowired
     LikeRepository likeRepository;
 
+    @Autowired
+    UserActionAuthenticator userActionAuthenticator;
+
     @PostMapping(TOGGLE_POST_LIKE)
-    public String togglePostLike(@RequestParam("postId") Integer postId, @RequestParam(value = "userId") Integer userId){
+    public String togglePostLike(@RequestParam("postId") Integer postId){
         try{
             String action = "";
+            Integer userId = userActionAuthenticator.getLoggedUser().getId().intValue();
             Like like = likeRepository.findUserLikeOnPost(postId, userId);
             if(Objects.isNull(like)){
                 likeRepository.save(new Like(postId, userId));
