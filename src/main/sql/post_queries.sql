@@ -47,3 +47,9 @@ CREATE TABLE public.follow (
 );
 ALTER TABLE public.follow ADD CONSTRAINT follow_user_fkey FOREIGN KEY (userId) REFERENCES public.users(id) ON DELETE CASCADE;
 ALTER TABLE public.follow ADD CONSTRAINT follow_followed_fkey FOREIGN KEY (followedBy) REFERENCES public.users(id) ON DELETE CASCADE;
+
+create table chat(chatId serial PRIMARY KEY, fromUserId INT NOT NULL,
+				  toUserId INT NOT NULL, chatText TEXT,
+				  sentTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+				  FOREIGN KEY (fromUserId) REFERENCES users(id) ON DELETE CASCADE,
+				 FOREIGN KEY (toUserId) REFERENCES users(id) ON DELETE CASCADE);
