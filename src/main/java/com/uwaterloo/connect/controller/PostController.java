@@ -1,15 +1,24 @@
 package com.uwaterloo.connect.controller;
 
 import com.uwaterloo.connect.model.Post;
+import com.uwaterloo.connect.model.Post.orderByLatestDate;
+import com.uwaterloo.connect.repository.FollowRepository;
 import com.uwaterloo.connect.repository.PostRepository;
 import com.uwaterloo.connect.security.UserActionAuthenticator;
+import com.uwaterloo.connect.service.FollowService;
 import com.uwaterloo.connect.service.PostEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.uwaterloo.connect.model.Follow;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static com.uwaterloo.connect.Constants.Constants.ERROR;
 import static com.uwaterloo.connect.Constants.Constants.SUCCESS;
 import static com.uwaterloo.connect.Constants.PostEndpointURLs.*;
 
@@ -21,10 +30,16 @@ public class PostController {
     PostRepository postRepository;
 
     @Autowired
+    FollowRepository followRepository;
+
+    @Autowired
     UserActionAuthenticator userActionAuthenticator;
 
     @Autowired
     PostEngine postEngine;
+
+    @Autowired
+    FollowService followService;
 
     @GetMapping(GET_USER_POSTS)
     public List<Post> getUserPosts(@PathVariable(value = "userId") Integer userId) {
@@ -84,4 +99,27 @@ public class PostController {
         return ResponseEntity.ok().body(SUCCESS);
     }
 
+    @GetMapping(GET_FEED)
+    public Map<String,  List<Post>> getFeed() {
+        Map<String,  List<Post>> responseMap = new HashMap<>();
+        try{
+            Integer currentUser = userActionAuthenticator.getLoggedUser().getId().intValue();
+            List<Follow> followers = followService.getFollowing(currentUser);
+            List<Post> posts = postRepository.findByUserId(currentUser);
+            List<Integer> followIds = new ArrayList<>();
+            for(Follow follower: followers){
+                followIds.add(follower.getUserId());
+            }
+            List<Post> followerPosts = postRepository.findAllById(followIds);
+            for(Post post: followerPosts){
+                if(!post.getIsPublic()){ followerPosts.remove(post);}
+            }
+            posts.addAll(followerPosts);
+            Collections.sort(posts, new orderByLatestDate());
+            responseMap.put(SUCCESS, posts);
+        } catch (Exception e){
+            responseMap.put(ERROR+e, new ArrayList<>());
+        }
+        return responseMap;
+    }
 }
