@@ -167,9 +167,9 @@ public class GroupController {
     }
 
     @GetMapping(GET_LEADERBOARD)
-    public List<Leaderboard> getLeaderboard(@RequestParam("groupId") Integer groupId, @RequestParam("leaderboardType") Integer leaderboardType){
+    public List<Leaderboard> getLeaderboard(@RequestParam("groupId") Integer groupId, @RequestParam("leaderboardTimeType") Integer leaderboardTimeType, @RequestParam("leaderboardType") Integer leaderboardType){
         try{
-            return groupService.getLeaderboard(groupId, leaderboardType);
+            return groupService.getLeaderboard(groupId, leaderboardTimeType, leaderboardType);
         }catch (Exception e){
             System.out.println(ERROR+e);
             return null;

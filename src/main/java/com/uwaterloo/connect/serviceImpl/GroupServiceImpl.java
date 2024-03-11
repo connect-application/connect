@@ -30,7 +30,7 @@ public class GroupServiceImpl implements GroupService {
     UserRepository userRepository;
 
     @Override
-    public List<Leaderboard> getLeaderboard(Integer groupId, Integer leaderboardType){
+    public List<Leaderboard> getLeaderboard(Integer groupId, Integer leaderboardTimeType, Integer leaderboardType){
         List<Leaderboard> leaderBoard = new ArrayList<>();
         ConnectGroups group = groupRepository.findConnectGroupsByGroupId(groupId);
         List<GroupMembers> groupMembers = memberRepository.findGroupMembersByGroupId(groupId);
@@ -40,21 +40,28 @@ public class GroupServiceImpl implements GroupService {
             User user = userRepository.findUserById(member.getUserId());
             if(Objects.nonNull(user)){
                 item.setUser(user);
-                List<Integer> acs = calculateActFinishedForMember(member.getUserId(), group.getCategoryId(), leaderboardType, timeNow);
+                List<Integer> acs = calculateActFinishedForMember(member.getUserId(), group.getCategoryId(), leaderboardTimeType, timeNow);
                 item.setActivitiesFinished(acs.get(0));
                 item.setActivitiesInProgress(acs.get(1));
                 leaderBoard.add(item);
             }
         }
-        Collections.sort(leaderBoard, Comparator.comparingInt(Leaderboard::getActivitiesFinished).reversed());
+        //2: Sort by Activity In Progress, 1 and default: By Finished
+        if(leaderboardType == 2){
+            Collections.sort(leaderBoard, Comparator.comparingInt(Leaderboard::getActivitiesInProgress).reversed());
+        }
+        else{
+            Collections.sort(leaderBoard, Comparator.comparingInt(Leaderboard::getActivitiesFinished).reversed());
+        }
+
         return leaderBoard;
     }
 
-    public List<Integer> calculateActFinishedForMember(Integer userId, Integer categoryId, Integer leaderboardType, LocalDateTime timeNow){
+    public List<Integer> calculateActFinishedForMember(Integer userId, Integer categoryId, Integer leaderboardTimeType, LocalDateTime timeNow){
 
         List<Integer> activities = new ArrayList<>();
         LocalDateTime time;
-        switch (leaderboardType){
+        switch (leaderboardTimeType){
             case 0: time = timeNow.minusDays(1);
                 break;
             case 1: time = timeNow.minusWeeks(1);
@@ -65,8 +72,8 @@ public class GroupServiceImpl implements GroupService {
                 break;
             default: return new ArrayList<>(Arrays.asList(0,0));
         }
-        activities.add(activityRepository.findActivitiesFinishedForUser(userId, time, timeNow));
-        activities.add(activityRepository.findActivitiesInProgressForUser(userId, time, timeNow));
+        activities.add(activityRepository.findActivitiesFinishedForUserForCategory(userId, time, timeNow, categoryId));
+        activities.add(activityRepository.findActivitiesInProgressForUserForCategory(userId, time, timeNow, categoryId));
         return activities;
     }
 }
