@@ -110,10 +110,7 @@ public class PostController {
             for(Follow follower: followers){
                 followIds.add(follower.getUserId());
             }
-            List<Post> followerPosts = postRepository.findAllById(followIds);
-            for(Post post: followerPosts){
-                if(!post.getIsPublic()){ followerPosts.remove(post);}
-            }
+            List<Post> followerPosts = postRepository.findFollowingPosts(followIds);
             posts.addAll(followerPosts);
             Collections.sort(posts, new orderByLatestDate());
             responseMap.put(SUCCESS, posts);
