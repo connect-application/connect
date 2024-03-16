@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 
 @Entity
 @Table(name = "post")
@@ -69,5 +70,14 @@ public class Post {
 
     public void setIsPublic(Boolean isPublic) {
         this.isPublic = isPublic;
+    }
+
+    public static class orderByLatestDate implements Comparator<Post>{
+        @Override
+        public int compare(Post p1, Post p2){
+            // Compare the creation dates in reverse order (decreasing order)
+            return p2.getCreatedAt().compareTo(p1.getCreatedAt());
+            
+        }
     }
 }
