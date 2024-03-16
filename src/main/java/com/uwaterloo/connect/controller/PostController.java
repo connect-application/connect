@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.uwaterloo.connect.model.Follow;
-
+import com.uwaterloo.connect.model.GroupPostMapping;
+import com.uwaterloo.connect.repository.GroupPostMappingRepository;
+import static com.uwaterloo.connect.Constants.Constants.ERROR;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -41,6 +43,10 @@ public class PostController {
     @Autowired
     FollowService followService;
 
+    @Autowired
+    GroupPostMappingRepository groupPostMappingRepository;
+
+
     @GetMapping(GET_USER_POSTS)
     public List<Post> getUserPosts(@PathVariable(value = "userId") Integer userId) {
         //TODO: Use LIMIT and OFFSET to return results in batches of say 10
@@ -56,10 +62,15 @@ public class PostController {
 
     @PostMapping(ADD_POST)
     public ResponseEntity<String> addPost(@RequestParam(value = "postText") String postText,
-                                          @RequestParam(value = "isPublic") Boolean isPublic) {
+                                          @RequestParam(value = "isPublic") Boolean isPublic,  @RequestParam(value = "isGroupPost") Boolean isGroupPost,  @RequestParam(value = "groudId") Integer groupId) {
         Post post = postEngine.createPost(
                 userActionAuthenticator.getLoggedUser().getId().intValue(), postText, isPublic);
         postRepository.save(post);
+        if(isGroupPost){
+            GroupPostMapping mapping = new GroupPostMapping(groupId, post.getPostId());
+            groupPostMappingRepository.save(mapping);
+        }
+
         return ResponseEntity.ok().body(SUCCESS);
     }
 
@@ -78,9 +89,15 @@ public class PostController {
     public ResponseEntity<String> deletePost(@RequestParam(value = "postId") Integer postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found for id: " + postId));
-        userActionAuthenticator.checkIfAuthorized(post.getUserId());
-        postRepository.delete(post);
-        return ResponseEntity.ok().body(SUCCESS);
+        try{
+            userActionAuthenticator.checkIfAuthorized(post.getUserId());
+            postEngine.deleteGroupPosts(postId);
+            postRepository.delete(post);
+            return ResponseEntity.ok().body(SUCCESS);
+        } catch(Exception e) {
+            return ResponseEntity.badRequest().body(e.toString());
+        }
+    
     }
 
     /**
