@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-import static com.uwaterloo.connect.Constants.Constants.POST_LIKE_NOTIFICATION_TYPE;
+import static com.uwaterloo.connect.Constants.Constants.*;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
@@ -38,13 +38,13 @@ public class NotificationServiceImpl implements NotificationService {
         User actionUser = userRepository.findUserById(actionUserId);
         switch (notificationType){
             case 1: stringBuilder.append(actionUser.getUsername());
-            stringBuilder.append(" liked your post!");
+            stringBuilder.append(NOTIFICATION_LIKED_POST);
             break;
             case 2: stringBuilder.append(actionUser.getUsername());
-            stringBuilder.append(" commented on your post!");
+            stringBuilder.append(NOTIFICATION_COMMENT_TEXT);
             break;
             case 3: stringBuilder.append(actionUser.getUsername());
-            stringBuilder.append(" started following you!");
+            stringBuilder.append(NOTIFICATION_FOLLOW_TEXT);
             break;
         }
         return stringBuilder.toString();
