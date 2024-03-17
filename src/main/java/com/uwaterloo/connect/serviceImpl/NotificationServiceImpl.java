@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.uwaterloo.connect.Constants.Constants.*;
 
@@ -49,4 +50,37 @@ public class NotificationServiceImpl implements NotificationService {
         }
         return stringBuilder.toString();
     }
+
+    @Override
+    public List<Notification> loadNotifications(){
+        return notificationRepository.loadNotificationsByUserId(userActionAuthenticator.getLoggedUser().getId().intValue());
+    }
+
+    @Override
+    public String markNotificationAsRead(Integer notificationId) {
+        try{
+            Notification notification = notificationRepository.findNotificationByNotificationId(notificationId);
+            notification.setOpened(true);
+            notificationRepository.save(notification);
+            return SUCCESS;
+        }catch (Exception e){
+            return ERROR+e;
+        }
+    }
+
+    @Override
+    public String markAllNotificationsAsRead() {
+        try{
+            List<Notification> notifications = notificationRepository.loadNotificationsByUserId(userActionAuthenticator.getLoggedUser().getId().intValue());
+            for(Notification notification: notifications){
+                notification.setOpened(true);
+                notificationRepository.save(notification);
+            }
+            return SUCCESS;
+        }catch (Exception e){
+            return ERROR+e;
+        }
+    }
+
+
 }
