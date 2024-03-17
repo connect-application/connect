@@ -11,8 +11,8 @@ import com.uwaterloo.connect.model.GroupPostMapping;
 @Repository
 public interface GroupPostMappingRepository extends JpaRepository<GroupPostMapping, Integer> {
 
-    @Query("SELECT g FROM GroupPostMapping g WHERE g.groupId = :groupId")
-    List<GroupPostMapping> findByGroupId(Integer groupId);
+    @Query("SELECT g FROM GroupPostMapping g WHERE g.groupId in :groupId")
+    List<GroupPostMapping> findByGroupIds(List<Integer> groupId);
 
     @Modifying
     @Query("DELETE FROM GroupPostMapping g WHERE g.postId = :postId")

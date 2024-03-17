@@ -3,6 +3,8 @@ package com.uwaterloo.connect.controller;
 import com.uwaterloo.connect.model.Post;
 import com.uwaterloo.connect.model.Post.orderByLatestDate;
 import com.uwaterloo.connect.repository.FollowRepository;
+import com.uwaterloo.connect.repository.GroupMemberRepository;
+import java.util.Set;
 import com.uwaterloo.connect.repository.PostRepository;
 import com.uwaterloo.connect.security.UserActionAuthenticator;
 import com.uwaterloo.connect.service.FollowService;
@@ -17,10 +19,10 @@ import static com.uwaterloo.connect.Constants.Constants.ERROR;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import static com.uwaterloo.connect.Constants.Constants.ERROR;
 import static com.uwaterloo.connect.Constants.Constants.SUCCESS;
 import static com.uwaterloo.connect.Constants.PostEndpointURLs.*;
 
@@ -36,6 +38,9 @@ public class PostController {
 
     @Autowired
     UserActionAuthenticator userActionAuthenticator;
+
+    @Autowired
+    GroupMemberRepository groupMemberRepository;
 
     @Autowired
     PostEngine postEngine;
@@ -122,13 +127,18 @@ public class PostController {
         try{
             Integer currentUser = userActionAuthenticator.getLoggedUser().getId().intValue();
             List<Follow> followers = followService.getFollowing(currentUser);
-            List<Post> posts = postRepository.findByUserId(currentUser);
+            Set<Post> uniquePosts = new HashSet<>();
+            List<Post> userPosts = postRepository.findByUserId(currentUser);
             List<Integer> followIds = new ArrayList<>();
             for(Follow follower: followers){
                 followIds.add(follower.getUserId());
             }
             List<Post> followerPosts = postRepository.findFollowingPosts(followIds);
-            posts.addAll(followerPosts);
+            List<Post> groupPosts = postRepository.findPostsByUserGroup(currentUser);
+            uniquePosts.addAll(userPosts);
+            uniquePosts.addAll(followerPosts);
+            uniquePosts.addAll(groupPosts);
+            List<Post> posts = new ArrayList<>(uniquePosts);
             Collections.sort(posts, new orderByLatestDate());
             responseMap.put(SUCCESS, posts);
         } catch (Exception e){
