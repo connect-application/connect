@@ -3,14 +3,14 @@ package com.uwaterloo.connect.controller;
 import com.uwaterloo.connect.model.Follow;
 import com.uwaterloo.connect.repository.FollowRepository;
 import com.uwaterloo.connect.security.UserActionAuthenticator;
+import com.uwaterloo.connect.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
 
-import static com.uwaterloo.connect.Constants.Constants.ERROR;
-import static com.uwaterloo.connect.Constants.Constants.SUCCESS;
+import static com.uwaterloo.connect.Constants.Constants.*;
 import static com.uwaterloo.connect.Constants.FollowEndpointURLs.*;
 
 
@@ -24,6 +24,9 @@ public class FollowController {
     @Autowired
     UserActionAuthenticator userActionAuthenticator;
 
+    @Autowired
+    NotificationService notificationService;
+
     @PostMapping(TOGGLE_FOLLOW)
     public String toggleFollow(@RequestParam("toFollow") Integer toFollowId){
         try{
@@ -32,6 +35,8 @@ public class FollowController {
             Follow follow = followRepository.findFollow(userId, toFollowId);
             if(Objects.isNull(follow)){
                 followRepository.save(new Follow(toFollowId, userId));
+                //create notification
+                notificationService.createNotification(toFollowId, USER_FOLLOWED_NOTIFICATION_TYPE);
                 action = ": Followed";
             }
             else{
