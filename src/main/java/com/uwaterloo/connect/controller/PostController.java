@@ -67,7 +67,7 @@ public class PostController {
 
     @PostMapping(ADD_POST)
     public ResponseEntity<String> addPost(@RequestParam(value = "postText") String postText,
-                                          @RequestParam(value = "isPublic") Boolean isPublic,  @RequestParam(value = "isGroupPost") Boolean isGroupPost,  @RequestParam(value = "groudId") Integer groupId) {
+                                          @RequestParam(value = "isPublic") Boolean isPublic,  @RequestParam(value = "isGroupPost") Boolean isGroupPost,  @RequestParam(value = "groupId") Integer groupId) {
         Post post = postEngine.createPost(
                 userActionAuthenticator.getLoggedUser().getId().intValue(), postText, isPublic);
         postRepository.save(post);
