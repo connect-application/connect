@@ -47,3 +47,7 @@ CREATE TABLE public.follow (
 );
 ALTER TABLE public.follow ADD CONSTRAINT follow_user_fkey FOREIGN KEY (userId) REFERENCES public.users(id) ON DELETE CASCADE;
 ALTER TABLE public.follow ADD CONSTRAINT follow_followed_fkey FOREIGN KEY (followedBy) REFERENCES public.users(id) ON DELETE CASCADE;
+
+ALTER TABLE users ADD COLUMN about TEXT;
+
+ALTER TABLE users ADD COLUMN profilePic bytea;
