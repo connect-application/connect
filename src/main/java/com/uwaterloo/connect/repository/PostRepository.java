@@ -21,4 +21,8 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     @Query("select a from Post a where a.userId in  :toFollowId and a.isPublic = true")
     List<Post> findFollowingPosts(@Param("toFollowId") List<Integer> userIds);
 
+
+    @Query(value = "SELECT * FROM post WHERE postid IN (SELECT post_id FROM group_post WHERE group_id IN (SELECT groupid FROM group_members WHERE userid = :userId))", nativeQuery = true)
+    List<Post> findPostsByUserGroup(@Param("userId") Integer userId);
+
 }

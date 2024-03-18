@@ -3,6 +3,8 @@ package com.uwaterloo.connect.controller;
 import com.uwaterloo.connect.model.Post;
 import com.uwaterloo.connect.model.Post.orderByLatestDate;
 import com.uwaterloo.connect.repository.FollowRepository;
+import com.uwaterloo.connect.repository.GroupMemberRepository;
+import java.util.Set;
 import com.uwaterloo.connect.repository.PostRepository;
 import com.uwaterloo.connect.security.UserActionAuthenticator;
 import com.uwaterloo.connect.service.FollowService;
@@ -11,14 +13,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.uwaterloo.connect.model.Follow;
-
+import com.uwaterloo.connect.model.GroupPostMapping;
+import com.uwaterloo.connect.repository.GroupPostMappingRepository;
+import static com.uwaterloo.connect.Constants.Constants.ERROR;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import static com.uwaterloo.connect.Constants.Constants.ERROR;
 import static com.uwaterloo.connect.Constants.Constants.SUCCESS;
 import static com.uwaterloo.connect.Constants.PostEndpointURLs.*;
 
@@ -36,10 +40,17 @@ public class PostController {
     UserActionAuthenticator userActionAuthenticator;
 
     @Autowired
+    GroupMemberRepository groupMemberRepository;
+
+    @Autowired
     PostEngine postEngine;
 
     @Autowired
     FollowService followService;
+
+    @Autowired
+    GroupPostMappingRepository groupPostMappingRepository;
+
 
     @GetMapping(GET_USER_POSTS)
     public List<Post> getUserPosts(@PathVariable(value = "userId") Integer userId) {
@@ -56,10 +67,15 @@ public class PostController {
 
     @PostMapping(ADD_POST)
     public ResponseEntity<String> addPost(@RequestParam(value = "postText") String postText,
-                                          @RequestParam(value = "isPublic") Boolean isPublic) {
+                                          @RequestParam(value = "isPublic") Boolean isPublic,  @RequestParam(value = "isGroupPost") Boolean isGroupPost,  @RequestParam(value = "groupId") Integer groupId) {
         Post post = postEngine.createPost(
                 userActionAuthenticator.getLoggedUser().getId().intValue(), postText, isPublic);
         postRepository.save(post);
+        if(isGroupPost){
+            GroupPostMapping mapping = new GroupPostMapping(groupId, post.getPostId());
+            groupPostMappingRepository.save(mapping);
+        }
+
         return ResponseEntity.ok().body(SUCCESS);
     }
 
@@ -78,9 +94,15 @@ public class PostController {
     public ResponseEntity<String> deletePost(@RequestParam(value = "postId") Integer postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found for id: " + postId));
-        userActionAuthenticator.checkIfAuthorized(post.getUserId());
-        postRepository.delete(post);
-        return ResponseEntity.ok().body(SUCCESS);
+        try{
+            userActionAuthenticator.checkIfAuthorized(post.getUserId());
+            postEngine.deleteGroupPosts(postId);
+            postRepository.delete(post);
+            return ResponseEntity.ok().body(SUCCESS);
+        } catch(Exception e) {
+            return ResponseEntity.badRequest().body(e.toString());
+        }
+    
     }
 
     /**
@@ -105,13 +127,18 @@ public class PostController {
         try{
             Integer currentUser = userActionAuthenticator.getLoggedUser().getId().intValue();
             List<Follow> followers = followService.getFollowing(currentUser);
-            List<Post> posts = postRepository.findByUserId(currentUser);
+            Set<Post> uniquePosts = new HashSet<>();
+            List<Post> userPosts = postRepository.findByUserId(currentUser);
             List<Integer> followIds = new ArrayList<>();
             for(Follow follower: followers){
                 followIds.add(follower.getUserId());
             }
             List<Post> followerPosts = postRepository.findFollowingPosts(followIds);
-            posts.addAll(followerPosts);
+            List<Post> groupPosts = postRepository.findPostsByUserGroup(currentUser);
+            uniquePosts.addAll(userPosts);
+            uniquePosts.addAll(followerPosts);
+            uniquePosts.addAll(groupPosts);
+            List<Post> posts = new ArrayList<>(uniquePosts);
             Collections.sort(posts, new orderByLatestDate());
             responseMap.put(SUCCESS, posts);
         } catch (Exception e){
