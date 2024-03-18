@@ -34,4 +34,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select p.userId from Post p JOIN Activity a on a.postId = p.postId where a.statusId = 4 and a.startTime > :startDate and a.startTime < :endDate and a.categoryId = :categoryId")
     List<Integer> findUsersByActivitiesInProgressBetweenTimeForCategory(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate, @Param("categoryId") Integer categoryId);
 
+    @Query("select u from User u where u.userName like %:userName%")
+    List<User> findUsersByUserName(@Param("userName") String userName);
+
 }
