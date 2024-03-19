@@ -6,6 +6,7 @@ import com.uwaterloo.connect.model.User;
 import com.uwaterloo.connect.repository.CommentRepository;
 import com.uwaterloo.connect.repository.PostRepository;
 import com.uwaterloo.connect.security.UserActionAuthenticator;
+import com.uwaterloo.connect.service.NotificationService;
 import org.hibernate.internal.util.MutableBoolean;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,8 @@ import java.util.Optional;
 import static com.uwaterloo.connect.Constants.Constants.SUCCESS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 class CommentControllerTest {
 
@@ -33,6 +36,9 @@ class CommentControllerTest {
 
     @Mock
     private PostRepository postRepository;
+
+    @Mock
+    private NotificationService notificationService;
 
     @InjectMocks
     private CommentController commentController;
@@ -68,6 +74,9 @@ class CommentControllerTest {
         user.setId(2L);
         Mockito.when(userActionAuthenticator.getLoggedUser())
                 .thenReturn(user);
+        User postUser = new User();
+        postUser.setId(456L);
+        when(postRepository.findUserIdByPostId(any())).thenReturn(postUser.getId().intValue());
         ResponseEntity<String> response = commentController.addComment(1, "Comment");
         assertEquals(savedComments.size(), 1);
         assertEquals(response.getBody(), SUCCESS);
