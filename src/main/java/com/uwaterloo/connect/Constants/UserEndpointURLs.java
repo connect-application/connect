@@ -7,5 +7,6 @@ public class UserEndpointURLs {
     public static final String EDIT_DOB = "/editDateOfBirth";
     public static final String EDIT_PROFILE_PIC = "/editProfilePic";
     public static final String RETRIEVE_CURRENT_USER = "/retrieveCurrentUser";
+    public static final String RETRIEVE_USER = "/{userId}";
 
 }

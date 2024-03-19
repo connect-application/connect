@@ -1,9 +1,13 @@
 package com.uwaterloo.connect.controller;
 
+import com.uwaterloo.connect.dto.UserResponse;
 import com.uwaterloo.connect.model.User;
 import com.uwaterloo.connect.repository.UserRepository;
 import com.uwaterloo.connect.security.UserActionAuthenticator;
+import com.uwaterloo.connect.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +27,23 @@ public class UserController {
 
     @Autowired
     UserActionAuthenticator userActionAuthenticator;
+
+    @Autowired
+    UserService userService;
+
+    public ResponseEntity<UserResponse> returnFromController(UserResponse userResponse) {
+        if (userResponse != null) {
+            return ResponseEntity.ok().body(userResponse);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @GetMapping(RETRIEVE_USER)
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long userId) {
+        UserResponse userResponse = userService.getUserById(userId);
+        return returnFromController(userResponse);
+    }
 
     @PostMapping(EDIT_FIRST_NAME)
     public ResponseEntity<String> editFirstName(@RequestParam(value = "firstName") String firstName) {
