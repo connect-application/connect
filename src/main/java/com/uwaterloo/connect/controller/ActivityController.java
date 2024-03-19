@@ -1,7 +1,9 @@
 package com.uwaterloo.connect.controller;
 
 import com.uwaterloo.connect.model.ActivityRequest;
+import com.uwaterloo.connect.model.ActivitySchedule;
 import com.uwaterloo.connect.repository.ActivityRepository;
+import com.uwaterloo.connect.repository.ActivityScheduleRepository;
 import com.uwaterloo.connect.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,8 @@ public class ActivityController {
     ActivityRepository activityRepository;
     @Autowired
     ActivityService activityService;
+    @Autowired
+    ActivityScheduleRepository activityScheduleRepository;
 
     public ResponseEntity<String> returnFromController(String result){
         if(SUCCESS.equals(result)){
@@ -34,7 +38,7 @@ public class ActivityController {
 
     @PostMapping(ADD_ACTIVITY)
     public ResponseEntity<String> addActivity(@RequestBody ActivityRequest activityRequest){
-        String result = activityService.createActivity(activityRequest);
+        String result = activityService.createActivity(activityRequest, false);
         return returnFromController(result);
     }
 
