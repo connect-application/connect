@@ -3,7 +3,9 @@ package com.uwaterloo.connect.controller;
 import com.uwaterloo.connect.model.Like;
 import com.uwaterloo.connect.model.User;
 import com.uwaterloo.connect.repository.LikeRepository;
+import com.uwaterloo.connect.repository.PostRepository;
 import com.uwaterloo.connect.security.UserActionAuthenticator;
+import com.uwaterloo.connect.service.NotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.Collections;
 import java.util.List;
 
+import static com.uwaterloo.connect.Constants.Constants.POST_LIKE_NOTIFICATION_TYPE;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
@@ -23,6 +26,12 @@ import static org.mockito.Mockito.times;
 public class LikeControllerTest {
     @Mock
     private LikeRepository likeRepository;
+
+    @Mock
+    private PostRepository postRepository;
+
+    @Mock
+    private NotificationService notificationService;
 
     @InjectMocks
     private LikeController likeController;
@@ -42,6 +51,9 @@ public class LikeControllerTest {
         User user = new User();
         user.setId(123L);
         when(userActionAuthenticator.getLoggedUser()).thenReturn(user);
+        User postUser = new User();
+        postUser.setId(456L);
+        when(postRepository.findUserIdByPostId(any())).thenReturn(postUser.getId().intValue());
         String result = likeController.togglePostLike(1);
         verify(likeRepository, times(1)).save(any(Like.class));
         assertEquals("SUCCESS: Liked", result);
