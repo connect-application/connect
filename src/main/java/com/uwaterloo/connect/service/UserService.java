@@ -3,6 +3,7 @@ package com.uwaterloo.connect.service;
 import com.uwaterloo.connect.model.Token;
 import com.uwaterloo.connect.model.User;
 import com.uwaterloo.connect.repository.UserRepository;
+import com.uwaterloo.connect.dto.UserResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,17 +25,19 @@ public class UserService implements UserDetailsService {
     private final TokenService tokenService;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException { // used by spring security to find during authentication
-        return userRepository.findByEmail(email).
-                orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_ERROR, email)));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException { // used by spring security to
+                                                                                           // find during authentication
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_ERROR, email)));
     }
 
     public String signUpUser(User user) {
         Optional<User> optionalUser = userRepository.findByUsernameOrEmail(user.getUsername(), user.getEmail());
         if (optionalUser.isPresent()) {
             User dbUser = optionalUser.get();
-            if (dbUser.isActive()) { // user is fully registered throw exception else we add/update and send verification mail again
-                if (dbUser.getEmail().equals(user.getEmail())) { //todo throw custom exceptions
+            if (dbUser.isActive()) { // user is fully registered throw exception else we add/update and send
+                                     // verification mail again
+                if (dbUser.getEmail().equals(user.getEmail())) { // todo throw custom exceptions
                     throw new IllegalStateException("User with this email already exists");
                 }
                 if (dbUser.getUsername().equals(user.getUsername())) {
@@ -54,7 +57,24 @@ public class UserService implements UserDetailsService {
     }
 
     public int enableUser(String email) {
-        return userRepository.enableUser(email,LocalDateTime.now());
+        return userRepository.enableUser(email, LocalDateTime.now());
+    }
+
+    public UserResponse getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User with id " + id + " not found"));
+        return convertUserToUserResponse(user);
+    }
+
+    private UserResponse convertUserToUserResponse(User user) {
+        return UserResponse.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .userName(user.getUsername())
+                .email(user.getEmail())
+                .dateOfBirth(user.getDateOfBirth())
+                .build();
     }
 
 }

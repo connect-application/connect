@@ -9,14 +9,11 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @ToString
 @Builder
-public class LoginResponse {
+public class UserResponse {
     private Long id;
     private String firstName;
     private String lastName;
     private String userName;
     private String email;
     private LocalDate dateOfBirth;
-    private String jwtToken;
-    private String code;
-    private String status;
 }

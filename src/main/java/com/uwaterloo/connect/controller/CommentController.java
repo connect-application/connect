@@ -5,6 +5,7 @@ import com.uwaterloo.connect.model.PostComment;
 import com.uwaterloo.connect.repository.CommentRepository;
 import com.uwaterloo.connect.repository.PostRepository;
 import com.uwaterloo.connect.security.UserActionAuthenticator;
+import com.uwaterloo.connect.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import static com.uwaterloo.connect.Constants.CommentEndpointURLs.*;
-import static com.uwaterloo.connect.Constants.Constants.SUCCESS;
+import static com.uwaterloo.connect.Constants.Constants.*;
 
 @RestController
 @RequestMapping("/comments")
@@ -28,6 +29,9 @@ public class CommentController {
 
     @Autowired
     UserActionAuthenticator userActionAuthenticator;
+
+    @Autowired
+    NotificationService notificationService;
 
     @PostMapping(GET_COMMENTS)
     public List<PostComment> getPostComments(@RequestParam(value = "postId") Integer postId) {
@@ -43,6 +47,10 @@ public class CommentController {
         Integer userId = userActionAuthenticator.getLoggedUser().getId().intValue();
         PostComment comment = new PostComment(postId, commentText, userId);
         commentRepository.save(comment);
+
+        //create notification
+        notificationService.createNotification(postRepository.findUserIdByPostId(postId), POST_COMMENT_NOTIFICATION_TYPE);
+
         return ResponseEntity.ok().body(SUCCESS);
     }
 

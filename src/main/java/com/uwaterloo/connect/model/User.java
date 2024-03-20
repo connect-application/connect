@@ -38,8 +38,10 @@ public class User implements UserDetails {
     private boolean locked = false;
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
-    private LocalDateTime createdAt = LocalDateTime.now();;
-    private LocalDateTime updatedAt = LocalDateTime.now();;
+    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime updatedAt = LocalDateTime.now();
+    private String about;
+    private byte[] profilePic;
 
     public User(String firstName, String lastName, String userName, String email, String password, LocalDate dateOfBirth, UserRole userRole) {
         this.firstName = firstName;
@@ -85,5 +87,21 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return active;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
+
+    public byte[] getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(byte[] profilePic) {
+        this.profilePic = profilePic;
     }
 }

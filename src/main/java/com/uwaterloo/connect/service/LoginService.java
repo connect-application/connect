@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -39,6 +40,11 @@ public class LoginService {
         String jwtToken = jwtUtils.generateTokenFromUsername(user.getUsername());
         return LoginResponse.builder()
                 .email(user.getEmail())
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .dateOfBirth(user.getDateOfBirth())
+                .userName(user.getUsername())
                 .jwtToken(jwtToken)
                 .code(ResponseCodes.SUCCESS.getCode())
                 .status("Login Successful")

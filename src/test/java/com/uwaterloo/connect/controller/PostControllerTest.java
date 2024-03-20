@@ -78,7 +78,7 @@ class PostControllerTest {
                     return i.getArguments()[0];
                 });
         Mockito.when(postEngine.createPost(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(new Post());
-        ResponseEntity<String> response = postController.addPost("This a post", true);
+        ResponseEntity<String> response = postController.addPost("This a post", true, false, null);
         assertEquals(savedPosts.size(), 1);
         assertEquals(response.getBody(), SUCCESS);
     }
