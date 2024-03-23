@@ -16,4 +16,6 @@ public class UserResponse {
     private String userName;
     private String email;
     private LocalDate dateOfBirth;
+    private String about;
+    private byte[] profilePic;
 }

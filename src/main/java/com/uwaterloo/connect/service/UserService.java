@@ -74,6 +74,8 @@ public class UserService implements UserDetailsService {
                 .userName(user.getUsername())
                 .email(user.getEmail())
                 .dateOfBirth(user.getDateOfBirth())
+                .about(user.getAbout())
+                .profilePic(user.getProfilePic())
                 .build();
     }
 

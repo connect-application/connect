@@ -62,10 +62,11 @@ public class UserController {
     }
 
     @PostMapping(EDIT_ABOUT)
-    public void editAbout(@RequestParam(value = "about") String about) {
+    public ResponseEntity<String> editAbout(@RequestParam(value = "about") String about) {
         User loggedUser = userActionAuthenticator.getLoggedUser();
         loggedUser.setAbout(about);
         userRepository.save(loggedUser);
+        return ResponseEntity.ok().body(SUCCESS);
     }
 
     @PostMapping(EDIT_DOB)
