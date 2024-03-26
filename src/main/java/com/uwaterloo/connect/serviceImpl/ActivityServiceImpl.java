@@ -91,7 +91,6 @@ public class ActivityServiceImpl implements ActivityService {
                     activitySchedule.setActivityId(postId);
                     activitySchedule.setNextRunDate(activityRequest.getRecurrence());
                     activityScheduleRepository.save(activitySchedule);
-                    System.out.println(activityRequest.printRecurrence());
                 }
             }
 
@@ -105,7 +104,7 @@ public class ActivityServiceImpl implements ActivityService {
         try{
             Integer userId = null;
             if(activityRequest.getParentId() != null){
-                userId = 4;
+                userId = activityRequest.getUserId();
             } else {
                 userId = userActionAuthenticator.getLoggedUser().getId().intValue();
             }
@@ -226,6 +225,8 @@ public class ActivityServiceImpl implements ActivityService {
                         activity.setNextRunDateAsNull();
                     } else {
                         ActivityRequest activityRequest = new ActivityRequest(parent);
+                        Integer userId = postRepository.findUserIdByPostId(parent.getPostId());
+                        activityRequest.setUserId(userId);
                         createActivity(activityRequest, true);
                         if(parent.getRecurrence() != null){
                             String startDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));

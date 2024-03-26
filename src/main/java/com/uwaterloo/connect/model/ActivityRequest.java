@@ -22,6 +22,7 @@ public class ActivityRequest {
     private List<byte[]> files;
     private Recurrence recurrence = null; // New field for recurrence
     private Integer parentId = null;
+    private Integer userID = null;
 
     public static class Recurrence {
         private String type;
@@ -85,40 +86,7 @@ public class ActivityRequest {
     public void setRecurrence(Recurrence recurrence){
         this.recurrence = recurrence;
     }
-    // public void setRecurrence(String recurrence){
-    //     Recurrence recurrence2 = new Recurrence();
-    //     recurrence = recurrence.replace("Recurrence{", "").replaceAll("}", "");
-    //     String[] rec = recurrence.split("[\\[\\]]", -1);
-    //     String[] parts = rec[0].split(","); // rec[0] = entire string except daysOfWeek , rec[1] = daysOfWeek list
-    //     for(String part : parts){
-    //         String[] key_value = part.split("=");
-    //         String key = key_value[0];
-    //         String value = key_value[1].replaceAll("'", "");
-    //         switch (key) {
-    //             case "type":
-    //                 recurrence2.setType(value);
-    //                 break;
-    //             case "interval":
-    //                 recurrence2.setInterval(Integer.parseInt(value));
-    //                 break;
-    //             case "startDate":
-    //                 recurrence2.setStartDate(value);
-    //                 break;
-    //             case "endDate":
-    //                 recurrence2.setEndDate(value);
-    //                 break;
-    //             case "daysOfWeek":
-    //                 // Split the value into an array of day names
-    //                 String[] days = rec[1].replaceAll("[\\[\\]]", "").split(", ");
-    //                 recurrence2.setDaysOfWeek(Arrays.asList(days));
-    //                 break;
-    //             default:
-    //                 // Handle any unexpected keys
-    //                 break;
-    //         }
-    //     }
-    //     this.recurrence = recurrence2;
-    // }
+
     public ActivityRequest(Activity activity) {
         this.parentId = activity.getPostId();
         this.categoryId = activity.getCategoryId();
@@ -152,6 +120,12 @@ public class ActivityRequest {
 
     public boolean isShared() {
         return shared;
+    }
+    public void setUserId(Integer userId){
+        this.userID = userId;
+    }
+    public Integer getUserId(){
+        return userID;
     }
 
     public boolean isNotified() {
