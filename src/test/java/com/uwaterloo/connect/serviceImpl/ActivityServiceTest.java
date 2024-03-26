@@ -76,7 +76,7 @@ public class ActivityServiceTest {
         when(userActionAuthenticator.getLoggedUser()).thenReturn(user);
         Mockito.when(postEngine.createPost(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(new Post());
         // Call the method
-        String result = activityService.createActivity(activityRequest);
+        String result = activityService.createActivity(activityRequest, false);
 
         // Verify the result
         assertEquals("SUCCESS", result);
@@ -92,7 +92,7 @@ public class ActivityServiceTest {
         User user = new User();
         user.setId(123L);
         Mockito.when(postEngine.createPost(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(new Post());
-        String result = activityService.createActivity(activityRequest);
+        String result = activityService.createActivity(activityRequest, false);
         // Verify the result
         assertEquals("ERROR: java.lang.NullPointerException: text", result);
         verify(postRepository, times(0)).save(any(Post.class));
