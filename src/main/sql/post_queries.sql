@@ -51,3 +51,9 @@ ALTER TABLE public.follow ADD CONSTRAINT follow_followed_fkey FOREIGN KEY (follo
 ALTER TABLE users ADD COLUMN about TEXT;
 
 ALTER TABLE users ADD COLUMN profilePic bytea;
+
+create table chat(chatId serial PRIMARY KEY, fromUserId INT NOT NULL,
+				  toUserId INT NOT NULL, chatText TEXT,
+				  sentTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+				  FOREIGN KEY (fromUserId) REFERENCES users(id) ON DELETE CASCADE,
+				 FOREIGN KEY (toUserId) REFERENCES users(id) ON DELETE CASCADE);
