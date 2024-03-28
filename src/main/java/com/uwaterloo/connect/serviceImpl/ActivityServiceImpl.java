@@ -12,7 +12,9 @@ import com.uwaterloo.connect.service.ActivityService;
 import com.uwaterloo.connect.service.PostEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -41,13 +43,13 @@ public class ActivityServiceImpl implements ActivityService {
     UserActionAuthenticator userActionAuthenticator;
 
     @Override
-    public String createActivity(ActivityRequest activityRequest){
+    public String createActivity(ActivityRequest activityRequest, List<MultipartFile> files){
         try{
 
             //New post
             Integer postId = createPostForActivity(activityRequest);
             //Save attachments
-            createAttachmentsforPost(postId, activityRequest.getFiles());
+            createAttachmentsforPost(postId, files);
             //Make activity for the new post
             Activity activity = new Activity();
             activity.setPostId(postId);
@@ -76,12 +78,13 @@ public class ActivityServiceImpl implements ActivityService {
         }
     }
 
-    public List<Integer> createAttachmentsforPost(Integer postId, List<byte[]> files){
+    public List<Integer> createAttachmentsforPost(Integer postId, List<MultipartFile> files) throws IOException {
         List<Integer> attachmentIds = new ArrayList<>();
         if(Objects.isNull(files)){
             return attachmentIds;
         }
-        for(byte[] file: files){
+        for(MultipartFile multipartFilefile: files){
+            byte[] file = multipartFilefile.getBytes();
             Attachment attachment = new Attachment();
             attachment.setPostId(postId);
             attachment.setFile(file);

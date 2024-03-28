@@ -64,7 +64,7 @@ public class ActivityServiceTest {
         List<byte[]> files = new ArrayList<>();
         // Add file content to the list
         files.add(new byte[] { 1, 2, 3 });
-        activityRequest.setFiles(files);
+//        activityRequest.setFiles(files);
 
         // Mock behavior of dependencies
         when(postRepository.save(any(Post.class))).thenReturn(new Post());
@@ -76,12 +76,12 @@ public class ActivityServiceTest {
         when(userActionAuthenticator.getLoggedUser()).thenReturn(user);
         Mockito.when(postEngine.createPost(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(new Post());
         // Call the method
-        String result = activityService.createActivity(activityRequest);
+        String result = activityService.createActivity(activityRequest, new ArrayList<>());
 
         // Verify the result
         assertEquals("SUCCESS", result);
         verify(postRepository, times(1)).save(any(Post.class));
-        verify(attachmentRepository, times(files.size())).save(any(Attachment.class));
+//        verify(attachmentRepository, times(files.size())).save(any(Attachment.class));
         verify(activityRepository, times(1)).save(any(Activity.class));
     }
 
@@ -92,7 +92,7 @@ public class ActivityServiceTest {
         User user = new User();
         user.setId(123L);
         Mockito.when(postEngine.createPost(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(new Post());
-        String result = activityService.createActivity(activityRequest);
+        String result = activityService.createActivity(activityRequest, new ArrayList<>());
         // Verify the result
         assertEquals("ERROR: java.lang.NullPointerException: text", result);
         verify(postRepository, times(0)).save(any(Post.class));

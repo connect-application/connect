@@ -14,7 +14,7 @@ public class ActivityRequest {
     private boolean shared = false;
     private boolean notified = false;
     private String postText;
-    private List<byte[]> files;
+
 
     public Integer getCategoryId() {
         return categoryId;
@@ -48,9 +48,7 @@ public class ActivityRequest {
         return postText;
     }
 
-    public List<byte[]> getFiles() {
-        return files;
-    }
+
 
     @Override
     public String toString() {
@@ -98,7 +96,5 @@ public class ActivityRequest {
         this.postText = postText;
     }
 
-    public void setFiles(List<byte[]> files) {
-        this.files = files;
-    }
+
 }
