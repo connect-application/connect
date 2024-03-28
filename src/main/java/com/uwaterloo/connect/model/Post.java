@@ -21,6 +21,26 @@ public class Post {
 
     private Boolean isPublic;
 
+    @Transient
+    private boolean isLiked = false;
+
+    @Transient
+    private Integer noOfLikes = 0;
+
+    public boolean isLiked(){
+        return this.isLiked;
+    }
+    public Integer getNoOfLikes(){
+        return this.noOfLikes;
+    }
+
+    public void setLiked(Boolean liked){
+        this.isLiked = liked;
+    }
+    public void setNoOfLikes(Integer noOfLikes){
+        this.noOfLikes = noOfLikes;
+    }
+
     public Post(Integer userId, String postText, Boolean isPublic) {
         this.userId = userId;
         this.postText = postText;

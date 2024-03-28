@@ -2,6 +2,7 @@ package com.uwaterloo.connect.controller;
 
 import com.uwaterloo.connect.model.Post;
 import com.uwaterloo.connect.model.Post.orderByLatestDate;
+import com.uwaterloo.connect.repository.AttachmentRepository;
 import com.uwaterloo.connect.repository.FollowRepository;
 import com.uwaterloo.connect.repository.GroupMemberRepository;
 import java.util.Set;
@@ -12,9 +13,13 @@ import com.uwaterloo.connect.service.PostEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.uwaterloo.connect.model.Like;
+import com.uwaterloo.connect.model.Attachment;
 import com.uwaterloo.connect.model.Follow;
 import com.uwaterloo.connect.model.GroupPostMapping;
 import com.uwaterloo.connect.repository.GroupPostMappingRepository;
+import com.uwaterloo.connect.repository.LikeRepository;
+
 import static com.uwaterloo.connect.Constants.Constants.ERROR;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,6 +56,11 @@ public class PostController {
     @Autowired
     GroupPostMappingRepository groupPostMappingRepository;
 
+    @Autowired
+    AttachmentRepository attachmentRepository;
+
+    @Autowired
+    LikeRepository likeRepository;
 
     @GetMapping(GET_USER_POSTS)
     public List<Post> getUserPosts(@PathVariable(value = "userId") Integer userId) {
@@ -139,6 +149,14 @@ public class PostController {
             uniquePosts.addAll(followerPosts);
             uniquePosts.addAll(groupPosts);
             List<Post> posts = new ArrayList<>(uniquePosts);
+            for(Post p: posts){
+                Like isLiked = likeRepository.findUserLikeOnPost(p.getPostId(),currentUser);
+                Integer noOfLikes = likeRepository.findLikecountOnPost(p.getPostId());
+                if(isLiked != null){
+                    p.setLiked(true);
+                }
+                p.setNoOfLikes(noOfLikes);
+            }
             Collections.sort(posts, new orderByLatestDate());
             responseMap.put(SUCCESS, posts);
         } catch (Exception e){
